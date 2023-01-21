@@ -14,6 +14,8 @@ npx cap sync
 <docgen-index>
 
 * [`echo(...)`](#echo)
+* [`startScanning()`](#startscanning)
+* [`stopScanning()`](#stopscanning)
 
 </docgen-index>
 
@@ -31,6 +33,24 @@ echo(options: { value: string; }) => Promise<{ value: string; }>
 | **`options`** | <code>{ value: string; }</code> |
 
 **Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
+
+--------------------
+
+
+### startScanning()
+
+```typescript
+startScanning() => Promise<void>
+```
+
+--------------------
+
+
+### stopScanning()
+
+```typescript
+stopScanning() => Promise<void>
+```
 
 --------------------
 

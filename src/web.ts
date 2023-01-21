@@ -7,4 +7,12 @@ export class SunmiUHFWeb extends WebPlugin implements SunmiUHFPlugin {
     console.log('ECHO', options);
     return options;
   }
+
+  startScanning(): Promise<void> {
+    return Promise.resolve(undefined);
+  }
+
+  stopScanning(): Promise<void> {
+    return Promise.resolve(undefined);
+  }
 }
