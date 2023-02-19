@@ -25,6 +25,22 @@ export interface SunmiUHFPlugin {
   writeTag(options: { bank: "RESERVED"|"EPC"|"TID"|"USER", address: number, data: string, password?: string }): Promise<{ crc: string, pc: string, epc: string, details: { antenna: number, tag_read_count: number, start_time: number, end_time: number } }>;
 
   /**
+   * Tag operation – lock tags
+   *
+   * @see 2.4.3.3. in docs
+   * @todo implement
+   */
+  // lockTag(options: { bank: "USER"|"TID"|"EPC"|"ACCESS_PASSWORD"|"KILL_PASSWORD", type: "OPEN"|"LOCK"|"PERM_OPEM"|"PERM_LOCK", password: string }): Promise<{ crc: string, pc: string, epc: string, details: { antenna: number, tag_read_count: number, start_time: number, end_time: number } }>;
+
+  /**
+   * Tag operation – kill tags
+   *
+   * @see 2.4.3.4. in docs
+   * @todo implement
+   */
+  // killTag(options: { password?: string }): Promise<{ crc: string, pc: string, epc: string, details: { antenna: number, tag_read_count: number, start_time: number, end_time: number } }>;
+
+  /**
    * Tag operation – set the matched EPC to be accessed (EPC match is valid until the next refresh)
    *
    * @see 2.4.3.5. in docs
@@ -44,4 +60,20 @@ export interface SunmiUHFPlugin {
    * @see 2.4.3.7. in docs
    */
   getAccessEpcMatch(): Promise<{ epc_match: string, details: { start_time: number, end_time: number } }>;
+
+  /**
+   * Tag operation – set FastTID (only valid to some models of Impinj Monza tags)
+   *
+   * @see 2.4.3.8. in docs
+   * @todo implement
+   */
+  // setImpinjFastTid(options: { enable: boolean, save?: boolean }): Promise<{ details: { start_time: number, end_time: number } }>;
+
+  /**
+   * Tag operation – inquire FastTID
+   *
+   * @see 2.4.3.9. in docs
+   * @todo implement
+   */
+  // getImpinjFastTid(): Promise<{ status: number, details: { start_time: number, end_time: number } }>;
 }
