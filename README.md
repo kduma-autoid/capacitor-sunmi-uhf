@@ -16,11 +16,11 @@ npx cap sync
 * [`getScanModel()`](#getscanmodel)
 * [`startScanning(...)`](#startscanning)
 * [`stopScanning()`](#stopscanning)
+* [`readTag(...)`](#readtag)
+* [`writeTag(...)`](#writetag)
 * [`setAccessEpcMatch(...)`](#setaccessepcmatch)
 * [`cancelAccessEpcMatch()`](#cancelaccessepcmatch)
 * [`getAccessEpcMatch()`](#getaccessepcmatch)
-* [`readTag(...)`](#readtag)
-* [`writeTag(...)`](#writetag)
 
 </docgen-index>
 
@@ -32,6 +32,8 @@ npx cap sync
 ```typescript
 getScanModel() => Promise<{ model: "UHF_R2000" | "INNER" | "NONE" | "UNKNOWN"; available: boolean; }>
 ```
+
+Get RFID type
 
 **Returns:** <code>Promise&lt;{ model: 'UHF_R2000' | 'INNER' | 'NONE' | 'UNKNOWN'; available: boolean; }&gt;</code>
 
@@ -60,48 +62,13 @@ stopScanning() => Promise<void>
 --------------------
 
 
-### setAccessEpcMatch(...)
-
-```typescript
-setAccessEpcMatch(options: { epc: string; }) => Promise<{ details: { start_time: number; end_time: number; }; }>
-```
-
-| Param         | Type                          |
-| ------------- | ----------------------------- |
-| **`options`** | <code>{ epc: string; }</code> |
-
-**Returns:** <code>Promise&lt;{ details: { start_time: number; end_time: number; }; }&gt;</code>
-
---------------------
-
-
-### cancelAccessEpcMatch()
-
-```typescript
-cancelAccessEpcMatch() => Promise<{ details: { start_time: number; end_time: number; }; }>
-```
-
-**Returns:** <code>Promise&lt;{ details: { start_time: number; end_time: number; }; }&gt;</code>
-
---------------------
-
-
-### getAccessEpcMatch()
-
-```typescript
-getAccessEpcMatch() => Promise<{ epc_match: string; details: { start_time: number; end_time: number; }; }>
-```
-
-**Returns:** <code>Promise&lt;{ epc_match: string; details: { start_time: number; end_time: number; }; }&gt;</code>
-
---------------------
-
-
 ### readTag(...)
 
 ```typescript
 readTag(options: { bank: "RESERVED" | "EPC" | "TID" | "USER"; address: number; length: number; password?: string; }) => Promise<{ crc: string; pc: string; epc: string; data: string; details: { data_length: number; antenna: number; tag_read_count: number; start_time: number; end_time: number; }; }>
 ```
+
+Tag operation – read tags
 
 | Param         | Type                                                                                                               |
 | ------------- | ------------------------------------------------------------------------------------------------------------------ |
@@ -118,11 +85,56 @@ readTag(options: { bank: "RESERVED" | "EPC" | "TID" | "USER"; address: number; l
 writeTag(options: { bank: "RESERVED" | "EPC" | "TID" | "USER"; address: number; data: string; password?: string; }) => Promise<{ crc: string; pc: string; epc: string; details: { antenna: number; tag_read_count: number; start_time: number; end_time: number; }; }>
 ```
 
+Tag operation – write tags
+
 | Param         | Type                                                                                                             |
 | ------------- | ---------------------------------------------------------------------------------------------------------------- |
 | **`options`** | <code>{ bank: 'RESERVED' \| 'EPC' \| 'TID' \| 'USER'; address: number; data: string; password?: string; }</code> |
 
 **Returns:** <code>Promise&lt;{ crc: string; pc: string; epc: string; details: { antenna: number; tag_read_count: number; start_time: number; end_time: number; }; }&gt;</code>
+
+--------------------
+
+
+### setAccessEpcMatch(...)
+
+```typescript
+setAccessEpcMatch(options: { epc: string; }) => Promise<{ details: { start_time: number; end_time: number; }; }>
+```
+
+Tag operation – set the matched EPC to be accessed (EPC match is valid until the next refresh)
+
+| Param         | Type                          |
+| ------------- | ----------------------------- |
+| **`options`** | <code>{ epc: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ details: { start_time: number; end_time: number; }; }&gt;</code>
+
+--------------------
+
+
+### cancelAccessEpcMatch()
+
+```typescript
+cancelAccessEpcMatch() => Promise<{ details: { start_time: number; end_time: number; }; }>
+```
+
+Tag operation – clear the matched EPC to be accessed
+
+**Returns:** <code>Promise&lt;{ details: { start_time: number; end_time: number; }; }&gt;</code>
+
+--------------------
+
+
+### getAccessEpcMatch()
+
+```typescript
+getAccessEpcMatch() => Promise<{ epc_match: string; details: { start_time: number; end_time: number; }; }>
+```
+
+Tag operation – get EPC match
+
+**Returns:** <code>Promise&lt;{ epc_match: string; details: { start_time: number; end_time: number; }; }&gt;</code>
 
 --------------------
 
