@@ -68,7 +68,7 @@ public class SunmiUHFPlugin extends Plugin {
                     json.put("cmd", cmd);
                     json.put("params", params != null ? params.toString() : null);
 
-                    bridge.triggerWindowJSEvent("sunmi_uhf", json.toString());
+                    bridge.triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
@@ -115,7 +115,7 @@ public class SunmiUHFPlugin extends Plugin {
                     json.put("state", state);
                     json.put("tag", tag != null ? StrTools.normalizeHexStr(tag.toString(), true) : null);
 
-                    bridge.triggerWindowJSEvent("sunmi_uhf", json.toString());
+                    bridge.triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
                 }
             } catch (JSONException e) {
                 throw new RuntimeException(e);
@@ -131,7 +131,7 @@ public class SunmiUHFPlugin extends Plugin {
                 json.put("errorCode", errorCode);
                 json.put("msg", msg);
 
-                bridge.triggerWindowJSEvent("sunmi_uhf", json.toString());
+                bridge.triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
@@ -147,15 +147,6 @@ public class SunmiUHFPlugin extends Plugin {
     }
 
     // OnTerminate -> RFIDManager.getInstance().disconnect();
-
-    @PluginMethod
-    public void echo(PluginCall call) {
-        String value = call.getString("value");
-
-        JSObject ret = new JSObject();
-        ret.put("value", value);
-        call.resolve(ret);
-    }
 
     @PluginMethod
     public void startScanning(PluginCall call) {
@@ -192,9 +183,57 @@ public class SunmiUHFPlugin extends Plugin {
             return;
         }
 
-        helper.cancelAccessEpcMatch();
+        helper.registerReaderCall(new ReaderCall() {
+            @Override
+            public void onSuccess(byte cmd, @Nullable DataParameter params) throws RemoteException {
+                if (cmd == CMD.SET_ACCESS_EPC_MATCH) {
+                    helper.unregisterReaderCall();
 
-        call.resolve();
+                    JSObject ret = new JSObject();
+                    assert params != null;
+
+                    JSObject details = new JSObject();
+                    details.put("start_time", params.getLong(ParamCts.START_TIME));
+                    details.put("end_time", params.getLong(ParamCts.END_TIME));
+                    ret.put("details", details);
+
+                    call.resolve(ret);
+                } else {
+                    try {
+                        JSONObject json = new JSONObject();
+                        json.put("action", "onSuccess");
+                        json.put("cmd", cmd);
+                        json.put("params", params != null ? params.toString() : null);
+
+                        bridge.triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+
+            @Override
+            public void onTag(byte cmd, byte state, @Nullable DataParameter tag) throws RemoteException { }
+
+            @Override
+            public void onFailed(byte cmd, byte errorCode, @Nullable String msg) throws RemoteException {
+                helper.unregisterReaderCall();
+                try {
+                    JSONObject json = new JSONObject();
+                    json.put("action", "onFailed");
+                    json.put("cmd", cmd);
+                    json.put("errorCode", errorCode);
+                    json.put("msg", msg);
+
+                    bridge.triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+                call.reject(msg);
+            }
+        });
+        helper.cancelAccessEpcMatch();
     }
 
     @PluginMethod
@@ -237,15 +276,24 @@ public class SunmiUHFPlugin extends Plugin {
         helper.registerReaderCall(new ReaderCall() {
             @Override
             public void onSuccess(byte cmd, @Nullable DataParameter params) throws RemoteException {
-                helper.unregisterReaderCall();
-
                 if (cmd == CMD.READ_TAG) {
+                    helper.unregisterReaderCall();
+
                     JSObject ret = new JSObject();
                     assert params != null;
-                    ret.put("pc", StrTools.normalizeHexStr(params.getString(ParamCts.TAG_PC), true));
                     ret.put("crc", StrTools.normalizeHexStr(params.getString(ParamCts.TAG_CRC), true));
+                    ret.put("pc", StrTools.normalizeHexStr(params.getString(ParamCts.TAG_PC), true));
                     ret.put("epc", StrTools.normalizeHexStr(params.getString(ParamCts.TAG_EPC), true));
                     ret.put("data", StrTools.normalizeHexStr(params.getString(ParamCts.TAG_DATA), true));
+
+                    JSObject details = new JSObject();
+                    details.put("data_length", params.getInt(ParamCts.TAG_DATA_LEN));
+                    details.put("antenna", params.getByte(ParamCts.ANT_ID));
+                    details.put("tag_read_count", params.getInt(ParamCts.TAG_READ_COUNT));
+                    details.put("start_time", params.getLong(ParamCts.START_TIME));
+                    details.put("end_time", params.getLong(ParamCts.END_TIME));
+                    ret.put("details", details);
+
                     call.resolve(ret);
                 } else {
                     try {
@@ -254,7 +302,7 @@ public class SunmiUHFPlugin extends Plugin {
                         json.put("cmd", cmd);
                         json.put("params", params != null ? params.toString() : null);
 
-                        bridge.triggerWindowJSEvent("sunmi_uhf", json.toString());
+                        bridge.triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
@@ -274,7 +322,7 @@ public class SunmiUHFPlugin extends Plugin {
                     json.put("errorCode", errorCode);
                     json.put("msg", msg);
 
-                    bridge.triggerWindowJSEvent("sunmi_uhf", json.toString());
+                    bridge.triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
@@ -283,6 +331,109 @@ public class SunmiUHFPlugin extends Plugin {
             }
         });
         helper.readTag(btMemBank, btWordAdd, btWordCnt, btAryPassWord);
+    }
+
+    @PluginMethod
+    public void writeTag(PluginCall call) {
+        RFIDManager rfidManager = RFIDManager.getInstance();
+        if(!rfidManager.isConnect()) {
+            call.reject("RFIDManager not connected!");
+            return;
+        }
+
+        RFIDHelper helper = rfidManager.getHelper();
+        if(helper == null) {
+            call.reject("RFIDHelper is not available!");
+            return;
+        }
+
+        byte btMemBank;
+        switch(Objects.requireNonNull(call.getString("bank"))) {
+            case "RESERVED":
+                btMemBank = 0;
+                break;
+            case "EPC":
+                btMemBank = 1;
+                break;
+            case "TID":
+                btMemBank = 2;
+                break;
+            case "USER":
+                btMemBank = 3;
+                break;
+            default:
+                call.reject("Invalid bank!");
+                return;
+        }
+
+
+        byte btWordAdd = Objects.requireNonNull(call.getInt("address")).byteValue();
+        byte[] btAryPassWord = StrTools.hexStrToByteArray(Objects.requireNonNull(call.getString("password", "00000000")));
+        String data = Objects.requireNonNull(call.getString("data"));
+        byte[] btAryData = StrTools.hexStrToByteArray(data);
+        byte btWordCnt = btAryData.length > 0 ? (byte) (btAryData.length / 2) : 0;
+
+        if(btWordCnt==0 || btAryData.length % 2 != 0) {
+            call.reject("Invalid data!");
+            return;
+        }
+
+        helper.registerReaderCall(new ReaderCall() {
+            @Override
+            public void onSuccess(byte cmd, @Nullable DataParameter params) throws RemoteException {
+                helper.unregisterReaderCall();
+
+                if (cmd == CMD.WRITE_TAG) {
+                    JSObject ret = new JSObject();
+                    assert params != null;
+                    ret.put("crc", StrTools.normalizeHexStr(params.getString(ParamCts.TAG_CRC), true));
+                    ret.put("pc", StrTools.normalizeHexStr(params.getString(ParamCts.TAG_PC), true));
+                    ret.put("epc", StrTools.normalizeHexStr(params.getString(ParamCts.TAG_EPC), true));
+
+                    JSObject details = new JSObject();
+                    details.put("antenna", params.getByte(ParamCts.ANT_ID));
+                    details.put("tag_read_count", params.getInt(ParamCts.TAG_READ_COUNT));
+                    details.put("start_time", params.getLong(ParamCts.START_TIME));
+                    details.put("end_time", params.getLong(ParamCts.END_TIME));
+                    ret.put("details", details);
+
+                    call.resolve(ret);
+                } else {
+                    try {
+                        JSONObject json = new JSONObject();
+                        json.put("action", "onSuccess");
+                        json.put("cmd", cmd);
+                        json.put("params", params != null ? params.toString() : null);
+
+                        bridge.triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+
+            @Override
+            public void onTag(byte cmd, byte state, @Nullable DataParameter tag) throws RemoteException { }
+
+            @Override
+            public void onFailed(byte cmd, byte errorCode, @Nullable String msg) throws RemoteException {
+                helper.unregisterReaderCall();
+                try {
+                    JSONObject json = new JSONObject();
+                    json.put("action", "onFailed");
+                    json.put("cmd", cmd);
+                    json.put("errorCode", errorCode);
+                    json.put("msg", msg);
+
+                    bridge.triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+                call.reject(msg);
+            }
+        });
+        helper.writeTag(btAryPassWord, btMemBank, btWordAdd, btWordCnt, btAryData);
     }
 
     @PluginMethod
@@ -302,19 +453,31 @@ public class SunmiUHFPlugin extends Plugin {
         helper.registerReaderCall(new ReaderCall() {
             @Override
             public void onSuccess(byte cmd, @Nullable DataParameter params) throws RemoteException {
-                helper.unregisterReaderCall();
-                try {
-                    JSONObject json = new JSONObject();
-                    json.put("action", "onSuccess");
-                    json.put("cmd", cmd);
-                    json.put("params", params != null ? params.toString() : null);
+                if (cmd == CMD.GET_ACCESS_EPC_MATCH) {
+                    helper.unregisterReaderCall();
 
-                    bridge.triggerWindowJSEvent("sunmi_uhf", json.toString());
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
+                    JSObject ret = new JSObject();
+                    assert params != null;
+                    ret.put("epc_match", StrTools.normalizeHexStr(params.getString(ParamCts.TAG_ACCESS_EPC_MATCH), true));
+
+                    JSObject details = new JSObject();
+                    details.put("start_time", params.getLong(ParamCts.START_TIME));
+                    details.put("end_time", params.getLong(ParamCts.END_TIME));
+                    ret.put("details", details);
+
+                    call.resolve(ret);
+                } else {
+                    try {
+                        JSONObject json = new JSONObject();
+                        json.put("action", "onSuccess");
+                        json.put("cmd", cmd);
+                        json.put("params", params != null ? params.toString() : null);
+
+                        bridge.triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
-
-                call.resolve();
             }
 
             @Override
@@ -330,7 +493,7 @@ public class SunmiUHFPlugin extends Plugin {
                     json.put("errorCode", errorCode);
                     json.put("msg", msg);
 
-                    bridge.triggerWindowJSEvent("sunmi_uhf", json.toString());
+                    bridge.triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
@@ -359,9 +522,56 @@ public class SunmiUHFPlugin extends Plugin {
         byte[] epcBytes = StrTools.hexStrToByteArray(epc);
 
         assert epcBytes != null;
-        helper.setAccessEpcMatch((byte) epcBytes.length, epcBytes);
+        helper.registerReaderCall(new ReaderCall() {
+            @Override
+            public void onSuccess(byte cmd, @Nullable DataParameter params) throws RemoteException {
+                if (cmd == CMD.SET_ACCESS_EPC_MATCH) {
+                    helper.unregisterReaderCall();
+                    JSObject ret = new JSObject();
+                    assert params != null;
 
-        call.resolve();
+                    JSObject details = new JSObject();
+                    details.put("start_time", params.getLong(ParamCts.START_TIME));
+                    details.put("end_time", params.getLong(ParamCts.END_TIME));
+                    ret.put("details", details);
+
+                    call.resolve(ret);
+                } else {
+                    try {
+                        JSONObject json = new JSONObject();
+                        json.put("action", "onSuccess");
+                        json.put("cmd", cmd);
+                        json.put("params", params != null ? params.toString() : null);
+
+                        bridge.triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+
+            @Override
+            public void onTag(byte cmd, byte state, @Nullable DataParameter tag) throws RemoteException { }
+
+            @Override
+            public void onFailed(byte cmd, byte errorCode, @Nullable String msg) throws RemoteException {
+                helper.unregisterReaderCall();
+                try {
+                    JSONObject json = new JSONObject();
+                    json.put("action", "onFailed");
+                    json.put("cmd", cmd);
+                    json.put("errorCode", errorCode);
+                    json.put("msg", msg);
+
+                    bridge.triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+                call.reject(msg);
+            }
+        });
+        helper.setAccessEpcMatch((byte) epcBytes.length, epcBytes);
     }
 
     public void start(RFIDHelper helper) {

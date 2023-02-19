@@ -13,7 +13,6 @@ npx cap sync
 
 <docgen-index>
 
-* [`echo(...)`](#echo)
 * [`getScanModel()`](#getscanmodel)
 * [`startScanning(...)`](#startscanning)
 * [`stopScanning()`](#stopscanning)
@@ -21,26 +20,12 @@ npx cap sync
 * [`cancelAccessEpcMatch()`](#cancelaccessepcmatch)
 * [`getAccessEpcMatch()`](#getaccessepcmatch)
 * [`readTag(...)`](#readtag)
+* [`writeTag(...)`](#writetag)
 
 </docgen-index>
 
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
-
-### echo(...)
-
-```typescript
-echo(options: { value: string; }) => Promise<{ value: string; }>
-```
-
-| Param         | Type                            |
-| ------------- | ------------------------------- |
-| **`options`** | <code>{ value: string; }</code> |
-
-**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
-
---------------------
-
 
 ### getScanModel()
 
@@ -78,12 +63,14 @@ stopScanning() => Promise<void>
 ### setAccessEpcMatch(...)
 
 ```typescript
-setAccessEpcMatch(options: { epc: string; }) => Promise<void>
+setAccessEpcMatch(options: { epc: string; }) => Promise<{ details: { start_time: number; end_time: number; }; }>
 ```
 
 | Param         | Type                          |
 | ------------- | ----------------------------- |
 | **`options`** | <code>{ epc: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ details: { start_time: number; end_time: number; }; }&gt;</code>
 
 --------------------
 
@@ -91,8 +78,10 @@ setAccessEpcMatch(options: { epc: string; }) => Promise<void>
 ### cancelAccessEpcMatch()
 
 ```typescript
-cancelAccessEpcMatch() => Promise<void>
+cancelAccessEpcMatch() => Promise<{ details: { start_time: number; end_time: number; }; }>
 ```
+
+**Returns:** <code>Promise&lt;{ details: { start_time: number; end_time: number; }; }&gt;</code>
 
 --------------------
 
@@ -100,10 +89,10 @@ cancelAccessEpcMatch() => Promise<void>
 ### getAccessEpcMatch()
 
 ```typescript
-getAccessEpcMatch() => Promise<{ epc: string; }>
+getAccessEpcMatch() => Promise<{ epc_match: string; details: { start_time: number; end_time: number; }; }>
 ```
 
-**Returns:** <code>Promise&lt;{ epc: string; }&gt;</code>
+**Returns:** <code>Promise&lt;{ epc_match: string; details: { start_time: number; end_time: number; }; }&gt;</code>
 
 --------------------
 
@@ -111,14 +100,29 @@ getAccessEpcMatch() => Promise<{ epc: string; }>
 ### readTag(...)
 
 ```typescript
-readTag(options: { bank: "RESERVED" | "EPC" | "TID" | "USER"; address: number; length: number; password?: string; }) => Promise<{ pc: string; crc: string; epc: string; data: string; }>
+readTag(options: { bank: "RESERVED" | "EPC" | "TID" | "USER"; address: number; length: number; password?: string; }) => Promise<{ crc: string; pc: string; epc: string; data: string; details: { data_length: number; antenna: number; tag_read_count: number; start_time: number; end_time: number; }; }>
 ```
 
 | Param         | Type                                                                                                               |
 | ------------- | ------------------------------------------------------------------------------------------------------------------ |
 | **`options`** | <code>{ bank: 'RESERVED' \| 'EPC' \| 'TID' \| 'USER'; address: number; length: number; password?: string; }</code> |
 
-**Returns:** <code>Promise&lt;{ pc: string; crc: string; epc: string; data: string; }&gt;</code>
+**Returns:** <code>Promise&lt;{ crc: string; pc: string; epc: string; data: string; details: { data_length: number; antenna: number; tag_read_count: number; start_time: number; end_time: number; }; }&gt;</code>
+
+--------------------
+
+
+### writeTag(...)
+
+```typescript
+writeTag(options: { bank: "RESERVED" | "EPC" | "TID" | "USER"; address: number; data: string; password?: string; }) => Promise<{ crc: string; pc: string; epc: string; details: { antenna: number; tag_read_count: number; start_time: number; end_time: number; }; }>
+```
+
+| Param         | Type                                                                                                             |
+| ------------- | ---------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ bank: 'RESERVED' \| 'EPC' \| 'TID' \| 'USER'; address: number; data: string; password?: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ crc: string; pc: string; epc: string; details: { antenna: number; tag_read_count: number; start_time: number; end_time: number; }; }&gt;</code>
 
 --------------------
 
