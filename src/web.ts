@@ -7,10 +7,6 @@ export class SunmiUHFWeb extends WebPlugin implements SunmiUHFPlugin {
     throw this.unimplemented('Not implemented on web.');
   }
 
-  echo(): Promise<{ value: string }> {
-    throw this.unimplemented('Not implemented on web.');
-  }
-
   getAccessEpcMatch(): Promise<{ epc: string }> {
     throw this.unimplemented('Not implemented on web.');
   }

@@ -1,5 +1,4 @@
 export interface SunmiUHFPlugin {
-  echo(options: { value: string }): Promise<{ value: string }>;
   getScanModel(): Promise<{ model: "UHF_R2000"|"INNER"|"NONE"|"UNKNOWN", available: boolean }>;
   startScanning(options?: { repeat_times?: number }): Promise<void>;
   stopScanning(): Promise<void>;
