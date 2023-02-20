@@ -88,6 +88,9 @@ window.customElements.define(
         <button id='readTag'>readTag()</button>
         <button id='writeTag00'>writeTag(00)</button>
         <button id='writeTagFF'>writeTag(FF)</button>
+        <hr>
+        <button id='lockTag'>lockTag()</button>
+        <button id='unlockTag'>(un)lockTag()</button>
         
         <h2>List</h2>
       
@@ -234,6 +237,28 @@ window.customElements.define(
         } catch (error) {
           const output = self.shadowRoot.querySelector('#output');
           output.innerHTML = "<b>writeTag(FF FF) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
+      });
+
+      self.shadowRoot.querySelector('#lockTag').addEventListener('click', async function (e) {
+        try {
+          let data = await SunmiUHF.lockTag({bank: 'USER', type: 'LOCK', password: '000000'});
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>lockTag():</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        } catch (error) {
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>lockTag() - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
+      });
+
+      self.shadowRoot.querySelector('#unlockTag').addEventListener('click', async function (e) {
+        try {
+          let data = await SunmiUHF.lockTag({bank: 'USER', type: 'OPEN', password: '000000'});
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>(un)lockTag():</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        } catch (error) {
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>(un)lockTag() - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
         }
       });
 

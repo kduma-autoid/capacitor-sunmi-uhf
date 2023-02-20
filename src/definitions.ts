@@ -28,17 +28,15 @@ export interface SunmiUHFPlugin {
    * Tag operation – lock tags
    *
    * @see 2.4.3.3. in docs
-   * @todo implement
    */
-  // lockTag(options: { bank: "USER"|"TID"|"EPC"|"ACCESS_PASSWORD"|"KILL_PASSWORD", type: "OPEN"|"LOCK"|"PERM_OPEM"|"PERM_LOCK", password: string }): Promise<{ crc: string, pc: string, epc: string, details: { antenna: number, tag_read_count: number, start_time: number, end_time: number } }>;
+  lockTag(options: { bank: "USER"|"TID"|"EPC"|"ACCESS_PASSWORD"|"KILL_PASSWORD", type: "OPEN"|"LOCK"|"PERM_OPEM"|"PERM_LOCK", password: string }): Promise<{ crc: string, pc: string, epc: string, details: { antenna: number, tag_read_count: number, start_time: number, end_time: number } }>;
 
   /**
    * Tag operation – kill tags
    *
    * @see 2.4.3.4. in docs
-   * @todo implement
    */
-  // killTag(options: { password?: string }): Promise<{ crc: string, pc: string, epc: string, details: { antenna: number, tag_read_count: number, start_time: number, end_time: number } }>;
+  killTag(options: { password: string }): Promise<{ crc: string, pc: string, epc: string, details: { antenna: number, tag_read_count: number, start_time: number, end_time: number } }>;
 
   /**
    * Tag operation – set the matched EPC to be accessed (EPC match is valid until the next refresh)

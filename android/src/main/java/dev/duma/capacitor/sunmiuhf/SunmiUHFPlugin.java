@@ -437,6 +437,196 @@ public class SunmiUHFPlugin extends Plugin {
     }
 
     @PluginMethod
+    public void lockTag(PluginCall call) {
+        RFIDManager rfidManager = RFIDManager.getInstance();
+        if(!rfidManager.isConnect()) {
+            call.reject("RFIDManager not connected!");
+            return;
+        }
+
+        RFIDHelper helper = rfidManager.getHelper();
+        if(helper == null) {
+            call.reject("RFIDHelper is not available!");
+            return;
+        }
+
+        byte btMemBank;
+        switch(Objects.requireNonNull(call.getString("bank"))) {
+            case "USER":
+                btMemBank = 1;
+                break;
+            case "TID":
+                btMemBank = 2;
+                break;
+            case "EPC":
+                btMemBank = 3;
+                break;
+            case "ACCESS_PASSWORD":
+                btMemBank = 4;
+                break;
+            case "KILL_PASSWORD":
+                btMemBank = 5;
+                break;
+            default:
+                call.reject("Invalid bank!");
+                return;
+        }
+
+        byte btLockType;
+        switch(Objects.requireNonNull(call.getString("type"))) {
+            case "OPEN":
+                btLockType = 0;
+                break;
+            case "LOCK":
+                btLockType = 1;
+                break;
+            case "PERM_OPEM":
+                btLockType = 2;
+                break;
+            case "PERM_LOCK":
+                btLockType = 3;
+                break;
+            default:
+                call.reject("Invalid lock type!");
+                return;
+        }
+
+
+        byte[] btAryPassWord = StrTools.hexStrToByteArray(Objects.requireNonNull(call.getString("password", "00000000")));
+
+        helper.registerReaderCall(new ReaderCall() {
+            @Override
+            public void onSuccess(byte cmd, @Nullable DataParameter params) throws RemoteException {
+                helper.unregisterReaderCall();
+
+                if (cmd == CMD.LOCK_TAG) {
+                    JSObject ret = new JSObject();
+                    assert params != null;
+                    ret.put("crc", StrTools.normalizeHexStr(params.getString(ParamCts.TAG_CRC), true));
+                    ret.put("pc", StrTools.normalizeHexStr(params.getString(ParamCts.TAG_PC), true));
+                    ret.put("epc", StrTools.normalizeHexStr(params.getString(ParamCts.TAG_EPC), true));
+
+                    JSObject details = new JSObject();
+                    details.put("antenna", params.getByte(ParamCts.ANT_ID));
+                    details.put("tag_read_count", params.getInt(ParamCts.TAG_READ_COUNT));
+                    details.put("start_time", params.getLong(ParamCts.START_TIME));
+                    details.put("end_time", params.getLong(ParamCts.END_TIME));
+                    ret.put("details", details);
+
+                    call.resolve(ret);
+                } else {
+                    try {
+                        JSONObject json = new JSONObject();
+                        json.put("action", "onSuccess");
+                        json.put("cmd", cmd);
+                        json.put("params", params != null ? params.toString() : null);
+
+                        bridge.triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+
+            @Override
+            public void onTag(byte cmd, byte state, @Nullable DataParameter tag) throws RemoteException { }
+
+            @Override
+            public void onFailed(byte cmd, byte errorCode, @Nullable String msg) throws RemoteException {
+                helper.unregisterReaderCall();
+                try {
+                    JSONObject json = new JSONObject();
+                    json.put("action", "onFailed");
+                    json.put("cmd", cmd);
+                    json.put("errorCode", errorCode);
+                    json.put("msg", msg);
+
+                    bridge.triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+                call.reject(msg, "0x"+StrTools.byteToHexStr(errorCode));
+            }
+        });
+        helper.lockTag(btAryPassWord, btMemBank, btLockType);
+    }
+
+    @PluginMethod
+    public void killTag(PluginCall call) {
+        RFIDManager rfidManager = RFIDManager.getInstance();
+        if(!rfidManager.isConnect()) {
+            call.reject("RFIDManager not connected!");
+            return;
+        }
+
+        RFIDHelper helper = rfidManager.getHelper();
+        if(helper == null) {
+            call.reject("RFIDHelper is not available!");
+            return;
+        }
+
+        byte[] btAryPassWord = StrTools.hexStrToByteArray(Objects.requireNonNull(call.getString("password", "00000000")));
+
+        helper.registerReaderCall(new ReaderCall() {
+            @Override
+            public void onSuccess(byte cmd, @Nullable DataParameter params) throws RemoteException {
+                helper.unregisterReaderCall();
+
+                if (cmd == CMD.KILL_TAG) {
+                    JSObject ret = new JSObject();
+                    assert params != null;
+                    ret.put("crc", StrTools.normalizeHexStr(params.getString(ParamCts.TAG_CRC), true));
+                    ret.put("pc", StrTools.normalizeHexStr(params.getString(ParamCts.TAG_PC), true));
+                    ret.put("epc", StrTools.normalizeHexStr(params.getString(ParamCts.TAG_EPC), true));
+
+                    JSObject details = new JSObject();
+                    details.put("antenna", params.getByte(ParamCts.ANT_ID));
+                    details.put("tag_read_count", params.getInt(ParamCts.TAG_READ_COUNT));
+                    details.put("start_time", params.getLong(ParamCts.START_TIME));
+                    details.put("end_time", params.getLong(ParamCts.END_TIME));
+                    ret.put("details", details);
+
+                    call.resolve(ret);
+                } else {
+                    try {
+                        JSONObject json = new JSONObject();
+                        json.put("action", "onSuccess");
+                        json.put("cmd", cmd);
+                        json.put("params", params != null ? params.toString() : null);
+
+                        bridge.triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+
+            @Override
+            public void onTag(byte cmd, byte state, @Nullable DataParameter tag) throws RemoteException { }
+
+            @Override
+            public void onFailed(byte cmd, byte errorCode, @Nullable String msg) throws RemoteException {
+                helper.unregisterReaderCall();
+                try {
+                    JSONObject json = new JSONObject();
+                    json.put("action", "onFailed");
+                    json.put("cmd", cmd);
+                    json.put("errorCode", errorCode);
+                    json.put("msg", msg);
+
+                    bridge.triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+                call.reject(msg, "0x"+StrTools.byteToHexStr(errorCode));
+            }
+        });
+        helper.killTag(btAryPassWord);
+    }
+
+    @PluginMethod
     public void getAccessEpcMatch(PluginCall call) {
         RFIDManager rfidManager = RFIDManager.getInstance();
         if(!rfidManager.isConnect()) {

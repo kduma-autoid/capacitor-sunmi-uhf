@@ -35,4 +35,12 @@ export class SunmiUHFWeb extends WebPlugin implements SunmiUHFPlugin {
     throw this.unimplemented('Not implemented on web.');
   }
 
+  killTag(): Promise<{ crc: string; pc: string; epc: string; details: { antenna: number; tag_read_count: number; start_time: number; end_time: number } }> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  lockTag(): Promise<{ crc: string; pc: string; epc: string; details: { antenna: number; tag_read_count: number; start_time: number; end_time: number } }> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
 }
