@@ -75,9 +75,9 @@ window.customElements.define(
           Cumulative Read Count: <span id='cumulative'>0</span> tag(s)
         </div>
         <hr>
-        <button id='start_scan'>Start</button>
-        <button id='start_scan_255'>Start (0xFF)</button>
-        <button id='stop_scan'>Stop</button>
+        <button id='start_scan'>startScanning()</button>
+        <button id='start_scan_255'>startScanning(0xFF)</button>
+        <button id='stop_scan'>stopScanning()</button>
         <hr>
         <button id='get_model'>getScanModel</button>
         <hr>
@@ -104,85 +104,148 @@ window.customElements.define(
       const self = this;
 
       self.shadowRoot.querySelector('#start_scan').addEventListener('click', async function (e) {
-        const first_epc = self.shadowRoot.querySelector('#first_epc');
-        first_epc.innerHTML = "first";
-        const output = self.shadowRoot.querySelector('#output');
-        output.innerHTML = "";
-        const list = self.shadowRoot.querySelector('#list');
-        list.innerHTML = "";
-        this.tags = [];
-        this.reads = 0;
+        try {
+          const first_epc = self.shadowRoot.querySelector('#first_epc');
+          first_epc.innerHTML = "first";
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "";
+          const list = self.shadowRoot.querySelector('#list');
+          list.innerHTML = "";
+          this.tags = [];
+          this.reads = 0;
 
-        await SunmiUHF.startScanning();
+          await SunmiUHF.startScanning();
+        } catch (error) {
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>startScanning() - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
       });
 
       self.shadowRoot.querySelector('#start_scan_255').addEventListener('click', async function (e) {
-        const first_epc = self.shadowRoot.querySelector('#first_epc');
-        first_epc.innerHTML = "first";
-        const output = self.shadowRoot.querySelector('#output');
-        output.innerHTML = "";
-        const list = self.shadowRoot.querySelector('#list');
-        list.innerHTML = "";
-        this.tags = [];
-        this.reads = 0;
+        try {
+          const first_epc = self.shadowRoot.querySelector('#first_epc');
+          first_epc.innerHTML = "first";
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "";
+          const list = self.shadowRoot.querySelector('#list');
+          list.innerHTML = "";
+          this.tags = [];
+          this.reads = 0;
 
-        await SunmiUHF.startScanning({ repeat_times: 255});
+          await SunmiUHF.startScanning({ repeat_times: 255});
+        } catch (error) {
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>startScanning(255) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
       });
 
       self.shadowRoot.querySelector('#stop_scan').addEventListener('click', async function (e) {
-        await SunmiUHF.stopScanning();
+        try {
+          await SunmiUHF.stopScanning();
+        } catch (error) {
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>stopScanning() - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
       });
 
       self.shadowRoot.querySelector('#setAccessEpcMatch').addEventListener('click', async function (e) {
         const first_epc = self.shadowRoot.querySelector('#first_epc');
-        const data = await SunmiUHF.setAccessEpcMatch({ epc: first_epc.innerHTML });
-        const output = self.shadowRoot.querySelector('#output');
-        output.innerHTML = "<b>setAccessEpcMatch("+first_epc.innerHTML+"):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        try {
+          const data = await SunmiUHF.setAccessEpcMatch({ epc: first_epc.innerHTML });
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>setAccessEpcMatch("+first_epc.innerHTML+"):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        } catch (error) {
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>setAccessEpcMatch("+first_epc.innerHTML+") - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
       });
 
       self.shadowRoot.querySelector('#cancelAccessEpcMatch').addEventListener('click', async function (e) {
-        const data = await SunmiUHF.cancelAccessEpcMatch();
-        const output = self.shadowRoot.querySelector('#output');
-        output.innerHTML = "<b>cancelAccessEpcMatch():</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        try {
+          const data = await SunmiUHF.cancelAccessEpcMatch();
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>cancelAccessEpcMatch():</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        } catch (error) {
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>cancelAccessEpcMatch() - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
       });
 
       self.shadowRoot.querySelector('#getAccessEpcMatch').addEventListener('click', async function (e) {
-        const data = await SunmiUHF.getAccessEpcMatch();
-        const output = self.shadowRoot.querySelector('#output');
-        output.innerHTML = "<b>getAccessEpcMatch():</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        try {
+          const data = await SunmiUHF.getAccessEpcMatch();
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>getAccessEpcMatch():</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        } catch (error) {
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>getAccessEpcMatch() - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
       });
 
       self.shadowRoot.querySelector('#readTag').addEventListener('click', async function (e) {
-        let data = await SunmiUHF.readTag({bank: 'EPC', address: 0, length: 8});
         const output = self.shadowRoot.querySelector('#output');
-        output.innerHTML = "<b>readTag('EPC', 0, 8):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        let data = "";
 
-        data = await SunmiUHF.readTag({bank: 'TID', address: 0, length: 6});
-        output.innerHTML = "<b>readTag('TID', 0, 6):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        try {
+          data = await SunmiUHF.readTag({bank: 'EPC', address: 0, length: 8});
+          output.innerHTML = "<b>readTag('EPC', 0, 8):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        } catch (error) {
+          output.innerHTML = "<b>readTag('EPC', 0, 8) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
 
-        data = await SunmiUHF.readTag({bank: 'USER', address: 0, length: 2});
-        output.innerHTML = "<b>readTag('USER', 0, 2):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        try {
+          data = await SunmiUHF.readTag({bank: 'TID', address: 0, length: 6});
+          output.innerHTML = "<b>readTag('TID', 0, 6):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        } catch (error) {
+          output.innerHTML = "<b>readTag('TID', 0, 6) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
 
-        data = await SunmiUHF.readTag({bank: 'RESERVED', address: 0, length: 4});
-        output.innerHTML = "<b>readTag('RESERVED', 0, 4):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        try {
+          data = await SunmiUHF.readTag({bank: 'USER', address: 0, length: 2});
+          output.innerHTML = "<b>readTag('USER', 0, 2):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        } catch (error) {
+          output.innerHTML = "<b>readTag('USER', 0, 2) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
+
+        try {
+          data = await SunmiUHF.readTag({bank: 'RESERVED', address: 0, length: 4});
+          output.innerHTML = "<b>readTag('RESERVED', 0, 4):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        } catch (error) {
+          output.innerHTML = "<b>readTag('RESERVED', 0, 4) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
       });
 
       self.shadowRoot.querySelector('#writeTag00').addEventListener('click', async function (e) {
-        let data = await SunmiUHF.writeTag({bank: 'USER', address: 0, data: '00 00'});
-        const output = self.shadowRoot.querySelector('#output');
-        output.innerHTML = "<b>writeTag():</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        try {
+          let data = await SunmiUHF.writeTag({bank: 'USER', address: 0, data: '00 00'});
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>writeTag(00 00):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        } catch (error) {
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>writeTag(00 00) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
       });
 
       self.shadowRoot.querySelector('#writeTagFF').addEventListener('click', async function (e) {
-        let data = await SunmiUHF.writeTag({bank: 'USER', address: 0, data: 'FF FF'});
-        const output = self.shadowRoot.querySelector('#output');
-        output.innerHTML = "<b>readTag('EPC', 0, 8):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        try {
+          let data = await SunmiUHF.writeTag({bank: 'USER', address: 0, data: 'FF FF'});
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>writeTag(FF FF):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        } catch (error) {
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>writeTag(FF FF) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
       });
 
       self.shadowRoot.querySelector('#get_model').addEventListener('click', async function (e) {
-        const data = await SunmiUHF.getScanModel();
-        const output = self.shadowRoot.querySelector('#output');
-        output.innerHTML = "<b>getScanModel():</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        try {
+          const data = await SunmiUHF.getScanModel();
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>getScanModel():</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        } catch (error) {
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>getScanModel() - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
       });
 
       window.addEventListener('sunmi_uhf_debug', (e) => {

@@ -1,5 +1,7 @@
 package dev.duma.capacitor.sunmiuhf;
 
+import com.getcapacitor.JSObject;
+
 public class StrTools {
     public static byte[] hexStrToByteArray(String str) {
         if (str == null) {
@@ -35,7 +37,7 @@ public class StrTools {
 
         StringBuilder sb = new StringBuilder();
         for (byte b : bytes) {
-            sb.append(String.format("%02X", b));
+            sb.append(byteToHexStr(b));
             if (spaced) {
                 sb.append(" ");
             }
@@ -62,5 +64,9 @@ public class StrTools {
 
     public static String normalizeHexStr(byte[] str, boolean spaced) {
         return byteArrayToHexStr(str, spaced);
+    }
+
+    public static String byteToHexStr(byte b) {
+        return String.format("%02X", b);
     }
 }

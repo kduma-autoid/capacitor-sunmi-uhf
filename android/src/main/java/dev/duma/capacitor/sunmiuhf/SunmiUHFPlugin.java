@@ -230,7 +230,7 @@ public class SunmiUHFPlugin extends Plugin {
                     throw new RuntimeException(e);
                 }
 
-                call.reject(msg);
+                call.reject(msg, "0x"+StrTools.byteToHexStr(errorCode));
             }
         });
         helper.cancelAccessEpcMatch();
@@ -327,7 +327,7 @@ public class SunmiUHFPlugin extends Plugin {
                     throw new RuntimeException(e);
                 }
 
-                call.reject(msg);
+                call.reject(msg, "0x"+StrTools.byteToHexStr(errorCode));
             }
         });
         helper.readTag(btMemBank, btWordAdd, btWordCnt, btAryPassWord);
@@ -430,7 +430,7 @@ public class SunmiUHFPlugin extends Plugin {
                     throw new RuntimeException(e);
                 }
 
-                call.reject(msg);
+                call.reject(msg, "0x"+StrTools.byteToHexStr(errorCode));
             }
         });
         helper.writeTag(btAryPassWord, btMemBank, btWordAdd, btWordCnt, btAryData);
@@ -498,7 +498,7 @@ public class SunmiUHFPlugin extends Plugin {
                     throw new RuntimeException(e);
                 }
 
-                call.reject(msg);
+                call.reject(msg, "0x"+StrTools.byteToHexStr(errorCode));
             }
         });
         helper.getAccessEpcMatch();
@@ -568,7 +568,7 @@ public class SunmiUHFPlugin extends Plugin {
                     throw new RuntimeException(e);
                 }
 
-                call.reject(msg);
+                call.reject(msg, "0x"+StrTools.byteToHexStr(errorCode));
             }
         });
         helper.setAccessEpcMatch((byte) epcBytes.length, epcBytes);
