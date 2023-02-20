@@ -89,8 +89,12 @@ window.customElements.define(
         <button id='writeTag00'>writeTag(00)</button>
         <button id='writeTagFF'>writeTag(FF)</button>
         <hr>
+        <button id='writeTagPsw'>writeTag(Psw)</button>
+        <button id='writeTagCls'>writeTag(Cls)</button>
+        <hr>
         <button id='lockTag'>lockTag()</button>
         <button id='unlockTag'>(un)lockTag()</button>
+        <button id='killTag' disabled>killTag()</button>
         
         <h2>List</h2>
       
@@ -240,9 +244,31 @@ window.customElements.define(
         }
       });
 
+      self.shadowRoot.querySelector('#writeTagPsw').addEventListener('click', async function (e) {
+        try {
+          let data = await SunmiUHF.writeTag({bank: 'RESERVED', address: 0, data: '12345678'});
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>writeTag(Psw):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        } catch (error) {
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>writeTag(Psw) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
+      });
+
+      self.shadowRoot.querySelector('#writeTagCls').addEventListener('click', async function (e) {
+        try {
+          let data = await SunmiUHF.writeTag({bank: 'RESERVED', address: 0, data: '00000000', password: '12345678'});
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>writeTag(Cls):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        } catch (error) {
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>writeTag(Cls) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
+      });
+
       self.shadowRoot.querySelector('#lockTag').addEventListener('click', async function (e) {
         try {
-          let data = await SunmiUHF.lockTag({bank: 'USER', type: 'LOCK', password: '000000'});
+          let data = await SunmiUHF.lockTag({bank: 'USER', type: 'LOCK', password: '12345678'});
           const output = self.shadowRoot.querySelector('#output');
           output.innerHTML = "<b>lockTag():</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
         } catch (error) {
@@ -253,12 +279,23 @@ window.customElements.define(
 
       self.shadowRoot.querySelector('#unlockTag').addEventListener('click', async function (e) {
         try {
-          let data = await SunmiUHF.lockTag({bank: 'USER', type: 'OPEN', password: '000000'});
+          let data = await SunmiUHF.lockTag({bank: 'USER', type: 'OPEN', password: '12345678'});
           const output = self.shadowRoot.querySelector('#output');
           output.innerHTML = "<b>(un)lockTag():</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
         } catch (error) {
           const output = self.shadowRoot.querySelector('#output');
           output.innerHTML = "<b>(un)lockTag() - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
+      });
+
+      self.shadowRoot.querySelector('#killTag').addEventListener('click', async function (e) {
+        try {
+          let data = await SunmiUHF.killTag({password: '12345678'});
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>killTag():</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        } catch (error) {
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>killTag() - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
         }
       });
 
