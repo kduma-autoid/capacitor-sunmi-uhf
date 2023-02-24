@@ -44,6 +44,11 @@ getScanModel() => Promise<{ model: "UHF_R2000" | "INNER" | "NONE" | "UNKNOWN"; a
 
 Get RFID type
 
+**Returns:**
+
+- `model` - RFID type: `UHF_R2000` - UHF R2000, `INNER` - Inner RFID, `NONE` - No RFID module, `UNKNOWN` - Unknown RFID module.
+- `available` - Whether the RFID module is available.
+
 **Returns:** <code>Promise&lt;{ model: 'UHF_R2000' | 'INNER' | 'NONE' | 'UNKNOWN'; available: boolean; }&gt;</code>
 
 --------------------
@@ -54,6 +59,14 @@ Get RFID type
 ```typescript
 startScanning(options?: { repeat_times?: number | undefined; } | undefined) => Promise<void>
 ```
+
+Starts scanning inventory operation
+
+**Parameters:**
+
+- `options.repeat_times` - The number of times the inventory to be repeated. If it is `0xFF`, the time used in this inventory round is the shortest time. If there is only one tag in the RF area, the time used in this inventory round is 30-50mS. This parameter value is normally used when quickly polling with several antennas in a four-channel device.
+
+**Please note:** When the parameter `options.repeat_times` is set as `255`(`0xFF`), the algorithm specially designed for reading a small amount of tags will be enabled. It is more efficient and sensitive to read a small amount of tags. However, this parameter is not suitable to be used to simultaneously read a large amount of tags.
 
 | Param         | Type                                    |
 | ------------- | --------------------------------------- |
@@ -67,6 +80,8 @@ startScanning(options?: { repeat_times?: number | undefined; } | undefined) => P
 ```typescript
 setTagReadCallback(callback: (data: { epc: string; pc: string; frequency: string; rrsi: string; antenna: number; last_updated: number; read_count: number; }) => void) => Promise<CallbackID>
 ```
+
+Sets TagReadCallback
 
 | Param          | Type                                                                                                                                                     |
 | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -83,6 +98,8 @@ setTagReadCallback(callback: (data: { epc: string; pc: string; frequency: string
 clearTagReadCallback() => Promise<void>
 ```
 
+Removes TagReadCallback
+
 --------------------
 
 
@@ -91,6 +108,8 @@ clearTagReadCallback() => Promise<void>
 ```typescript
 setInventoryScanCompletedCallback(callback: (data: { rate: number; tags_read: number; details: { start_time: number; end_time: number; }; }) => void) => Promise<CallbackID>
 ```
+
+Sets InventoryScanCompletedCallback
 
 | Param          | Type                                                                                                                     |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------ |
@@ -107,6 +126,8 @@ setInventoryScanCompletedCallback(callback: (data: { rate: number; tags_read: nu
 clearInventoryScanCompletedCallback() => Promise<void>
 ```
 
+Removes InventoryScanCompletedCallback
+
 --------------------
 
 
@@ -115,6 +136,8 @@ clearInventoryScanCompletedCallback() => Promise<void>
 ```typescript
 stopScanning() => Promise<void>
 ```
+
+Stops scanning
 
 --------------------
 
@@ -126,6 +149,15 @@ readTag(options: { bank: "RESERVED" | "EPC" | "TID" | "USER"; address: number; l
 ```
 
 Tag operation – read tags
+
+**Parameters:**
+
+- `options.bank` - Tag memory bank: `RESERVED` - Reserved Memory, `EPC` - EPC Memory, `TID` - TID Memory, `USER` - User Memory.
+- `options.address` - The first word address of the data read. For the value range, please refer to tag specs.
+- `options.length` - The data length, word length or WORD (16 bits) length of the data read; For the value range, please refer to tag specs.
+- `options.password` - Tag access password. 4 bytes. If the tag does not have a password, this parameter is not required.
+
+**Please note:** `setAccessEpcMatch` should be done first. Tags with the same EPC but different data read will be deemed as different tags.
 
 | Param         | Type                                                                                                               |
 | ------------- | ------------------------------------------------------------------------------------------------------------------ |
@@ -144,6 +176,15 @@ writeTag(options: { bank: "RESERVED" | "EPC" | "TID" | "USER"; address: number; 
 
 Tag operation – write tags
 
+**Parameters:**
+
+- `options.bank` - Tag memory bank: `RESERVED` - Reserved Memory, `EPC` - EPC Memory, `TID` - TID Memory, `USER` - User Memory.
+- `options.address` - The first word address of the data written. For the value range, please refer to tag specs; it usually starts from 02 if it was written into EPC memory bank, and PC + CRC are stored in the first four bytes of this area.
+- `options.data` - The data written in Hex String Format.
+- `options.password` - Tag access password. 4 bytes. If the tag does not have a password, this parameter is not required.
+
+**Please note:** `setAccessEpcMatch` should be done first. Tags with the same EPC but different data read will be deemed as different tags.
+
 | Param         | Type                                                                                                             |
 | ------------- | ---------------------------------------------------------------------------------------------------------------- |
 | **`options`** | <code>{ bank: 'RESERVED' \| 'EPC' \| 'TID' \| 'USER'; address: number; data: string; password?: string; }</code> |
@@ -160,6 +201,14 @@ lockTag(options: { bank: "USER" | "TID" | "EPC" | "ACCESS_PASSWORD" | "KILL_PASS
 ```
 
 Tag operation – lock tags
+
+**Parameters:**
+
+- `options.bank` - Tag memory bank: `USER` - User Memory, `TID` - TID Memory, `EPC` - EPC Memory, `ACCESS_PASSWORD` - Access Password, `KILL_PASSWORD` - Kill Password.
+- `options.type` - The types of lock operation: `OPEN` - open, `LOCK` - lock, `PERM_OPEM` - permanently open, `PERM_LOCK` - permanently locked.
+- `options.password` - Tag access password. 4 bytes.
+
+**Please note:** `setAccessEpcMatch` should be done first. Tags with the same EPC but different data read will be deemed as different tags.
 
 | Param         | Type                                                                                                                                                             |
 | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -178,6 +227,12 @@ killTag(options: { password: string; }) => Promise<{ crc: string; pc: string; ep
 
 Tag operation – kill tags
 
+**Parameters:**
+
+- `options.password` - Tag access password. 4 bytes.
+
+**Please note:** `setAccessEpcMatch` should be done first. Tags with the same EPC but different data read will be deemed as different tags.
+
 | Param         | Type                               |
 | ------------- | ---------------------------------- |
 | **`options`** | <code>{ password: string; }</code> |
@@ -194,6 +249,12 @@ setAccessEpcMatch(options: { epc: string; }) => Promise<{ details: { start_time:
 ```
 
 Tag operation – set the matched EPC to be accessed (EPC match is valid until the next refresh)
+
+**Parameters:**
+
+- `options.epc` - EPC number in Hex String Format.
+
+**Please note:** Tags with the same EPC but different data read will be deemed as different tags.
 
 | Param         | Type                          |
 | ------------- | ----------------------------- |
@@ -237,6 +298,19 @@ setImpinjFastTid(options: { enable: boolean; save?: boolean; }) => Promise<{ det
 ```
 
 Tag operation – set FastTID (only valid to some models of Impinj Monza tags)
+
+**Parameters:**
+
+- `options.enable` - FastTID on or off status.
+- `options.save` - Save the configuration into the internal Flash, which will prevent it from being lost due to an outage. Default is `false`.
+
+**Please note:** This function is only effective to some models of Impinj Monza tags.
+
+**Please note:** This function recognizes EPC and TID at the same time, thus drastically enhancing the efficiency of reading TID.
+
+**Please note:** After turning on this function, tags of specific model will package TID into EPC during inventory. Therefore, the PC of a tag will be changed, and the original PC + EPC will become: the modified PC + EPC + (CRC of EPC) + TID.
+
+**Please note:** If there is something goes wrong when recognizing a TID, the original PC + EPC will be uploaded. ★Please turn off this function if you do not need it to avoid unnecessary time used.
 
 | Param         | Type                                              |
 | ------------- | ------------------------------------------------- |
