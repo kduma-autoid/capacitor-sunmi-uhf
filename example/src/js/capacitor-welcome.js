@@ -76,6 +76,7 @@ window.customElements.define(
         <hr>
         <button id='start_scan'>startScanning()</button>
         <button id='start_scan_255'>startScanning(0xFF)</button>
+        <button id='start_scan_callback'>startScanning(callback)</button>
         <button id='stop_scan'>stopScanning()</button>
         <hr>
         <button id='get_model'>getScanModel</button>
@@ -143,6 +144,32 @@ window.customElements.define(
           this.reads = 0;
 
           await SunmiUHF.startScanning({ repeat_times: 255});
+        } catch (error) {
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>startScanning(255) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
+      });
+
+      self.shadowRoot.querySelector('#start_scan_callback').addEventListener('click', async function (e) {
+        try {
+          const first_epc = self.shadowRoot.querySelector('#first_epc');
+          first_epc.innerHTML = "first";
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "";
+          const list = self.shadowRoot.querySelector('#list');
+          list.innerHTML = "";
+          this.tags = [];
+          this.reads = 0;
+
+          await SunmiUHF.setTagReadCallback((tag) => {
+            const output = self.shadowRoot.querySelector('#output');
+            output.innerHTML = "<b>setTagReadCallback():</b><br><pre>" + JSON.stringify(tag, null, 3) + "</pre><hr>" + output.innerHTML;
+          });
+          await SunmiUHF.setInventoryScanCompletedCallback((scan) => {
+            const output = self.shadowRoot.querySelector('#output');
+            output.innerHTML = "<b>setInventoryScanCompletedCallback():</b><br><pre>" + JSON.stringify(scan, null, 3) + "</pre><hr>" + output.innerHTML;
+          });
+          await SunmiUHF.startScanning();
         } catch (error) {
           const output = self.shadowRoot.querySelector('#output');
           output.innerHTML = "<b>startScanning(255) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;

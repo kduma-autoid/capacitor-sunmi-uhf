@@ -1,3 +1,5 @@
+export type CallbackID = string;
+
 export interface SunmiUHFPlugin {
   /**
    * Get RFID type
@@ -7,6 +9,10 @@ export interface SunmiUHFPlugin {
   getScanModel(): Promise<{ model: "UHF_R2000"|"INNER"|"NONE"|"UNKNOWN", available: boolean }>;
 
   startScanning(options?: { repeat_times?: number }): Promise<void>;
+  setTagReadCallback(callback: (data: { epc: string, pc: string, frequency: string, rrsi: string, antenna: number, last_updated: number, read_count: number }) => void): Promise<CallbackID>;
+  clearTagReadCallback(): Promise<void>;
+  setInventoryScanCompletedCallback(callback: (data: { rate: number, tags_read: number, details: { start_time: number, end_time: number } }) => void): Promise<CallbackID>;
+  clearInventoryScanCompletedCallback(): Promise<void>;
 
   stopScanning(): Promise<void>;
 

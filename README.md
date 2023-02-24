@@ -15,6 +15,10 @@ npx cap sync
 
 * [`getScanModel()`](#getscanmodel)
 * [`startScanning(...)`](#startscanning)
+* [`setTagReadCallback(...)`](#settagreadcallback)
+* [`clearTagReadCallback()`](#cleartagreadcallback)
+* [`setInventoryScanCompletedCallback(...)`](#setinventoryscancompletedcallback)
+* [`clearInventoryScanCompletedCallback()`](#clearinventoryscancompletedcallback)
 * [`stopScanning()`](#stopscanning)
 * [`readTag(...)`](#readtag)
 * [`writeTag(...)`](#writetag)
@@ -25,6 +29,7 @@ npx cap sync
 * [`getAccessEpcMatch()`](#getaccessepcmatch)
 * [`setImpinjFastTid(...)`](#setimpinjfasttid)
 * [`getImpinjFastTid()`](#getimpinjfasttid)
+* [Type Aliases](#type-aliases)
 
 </docgen-index>
 
@@ -53,6 +58,54 @@ startScanning(options?: { repeat_times?: number | undefined; } | undefined) => P
 | Param         | Type                                    |
 | ------------- | --------------------------------------- |
 | **`options`** | <code>{ repeat_times?: number; }</code> |
+
+--------------------
+
+
+### setTagReadCallback(...)
+
+```typescript
+setTagReadCallback(callback: (data: { epc: string; pc: string; frequency: string; rrsi: string; antenna: number; last_updated: number; read_count: number; }) => void) => Promise<CallbackID>
+```
+
+| Param          | Type                                                                                                                                                     |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`callback`** | <code>(data: { epc: string; pc: string; frequency: string; rrsi: string; antenna: number; last_updated: number; read_count: number; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;string&gt;</code>
+
+--------------------
+
+
+### clearTagReadCallback()
+
+```typescript
+clearTagReadCallback() => Promise<void>
+```
+
+--------------------
+
+
+### setInventoryScanCompletedCallback(...)
+
+```typescript
+setInventoryScanCompletedCallback(callback: (data: { rate: number; tags_read: number; details: { start_time: number; end_time: number; }; }) => void) => Promise<CallbackID>
+```
+
+| Param          | Type                                                                                                                     |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| **`callback`** | <code>(data: { rate: number; tags_read: number; details: { start_time: number; end_time: number; }; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;string&gt;</code>
+
+--------------------
+
+
+### clearInventoryScanCompletedCallback()
+
+```typescript
+clearInventoryScanCompletedCallback() => Promise<void>
+```
 
 --------------------
 
@@ -205,5 +258,13 @@ Tag operation – inquire FastTID
 **Returns:** <code>Promise&lt;{ status: number; details: { start_time: number; end_time: number; }; }&gt;</code>
 
 --------------------
+
+
+### Type Aliases
+
+
+#### CallbackID
+
+<code>string</code>
 
 </docgen-api>

@@ -1,6 +1,6 @@
 import { WebPlugin } from '@capacitor/core';
 
-import type { SunmiUHFPlugin } from './definitions';
+import type { CallbackID, SunmiUHFPlugin } from './definitions';
 
 export class SunmiUHFWeb extends WebPlugin implements SunmiUHFPlugin {
   cancelAccessEpcMatch(): Promise<{ details: { start_time: number; end_time: number } }> {
@@ -48,6 +48,22 @@ export class SunmiUHFWeb extends WebPlugin implements SunmiUHFPlugin {
   }
 
   setImpinjFastTid(): Promise<{ details: { start_time: number; end_time: number } }> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  clearInventoryScanCompletedCallback(): Promise<void> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  clearTagReadCallback(): Promise<void> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  setInventoryScanCompletedCallback(): Promise<CallbackID> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  setTagReadCallback(): Promise<CallbackID> {
     throw this.unimplemented('Not implemented on web.');
   }
 

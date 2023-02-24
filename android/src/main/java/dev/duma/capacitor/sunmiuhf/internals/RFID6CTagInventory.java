@@ -5,6 +5,7 @@ import android.os.RemoteException;
 import androidx.annotation.Nullable;
 
 import com.getcapacitor.Bridge;
+import com.getcapacitor.JSObject;
 import com.getcapacitor.PluginCall;
 import com.sunmi.rfid.RFIDHelper;
 import com.sunmi.rfid.RFIDManager;
@@ -16,7 +17,6 @@ import com.sunmi.rfid.entity.DataParameter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 import dev.duma.capacitor.sunmiuhf.StrTools;
@@ -36,25 +36,24 @@ public class RFID6CTagInventory {
 
             if (cmd == CMD.REAL_TIME_INVENTORY) {
                 if (params != null) {
-                    try {
-                        JSONObject json = new JSONObject();
+                    JSObject ret = new JSObject();
 
-                        int rate = params.getInt(ParamCts.READ_RATE, -1);
-                        if (rate == 0) rate = -1;
-                        json.put("rate", rate);
+                    int rate = params.getInt(ParamCts.READ_RATE, -1);
+                    if (rate == 0) rate = -1;
+                    ret.put("rate", rate);
 
-                        int tags_read = params.getInt(ParamCts.DATA_COUNT);
-                        json.put("tags_read", tags_read);
+                    ret.put("tags_read", params.getInt(ParamCts.DATA_COUNT));
 
-                        long start_time = params.getLong(ParamCts.START_TIME);
-                        json.put("start_time", start_time);
+                    JSObject details = new JSObject();
+                    details.put("start_time", params.getLong(ParamCts.START_TIME));
+                    details.put("end_time", params.getLong(ParamCts.END_TIME));
+                    ret.put("details", details);
 
-                        long end_time = params.getLong(ParamCts.END_TIME);
-                        json.put("end_time", end_time);
-
-                        bridge.triggerWindowJSEvent("sunmi_uhf_read_completed", json.toString());
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
+                    PluginCall call = getInventoryScanCompletedCallback();
+                    if (call != null) {
+                        call.resolve(ret);
+                    } else {
+                        bridge.triggerWindowJSEvent("sunmi_uhf_read_completed", ret.toString());
                     }
                 }
             } else {
@@ -75,46 +74,47 @@ public class RFID6CTagInventory {
         public void onTag(byte cmd, byte state, @Nullable DataParameter tag) throws RemoteException {
             if (tag == null) return;
 
-            try {
-                JSONObject json = new JSONObject();
+            JSObject ret = new JSObject();
 
-                if(cmd == CMD.REAL_TIME_INVENTORY) {
-                    String epc = tag.getString(ParamCts.TAG_EPC);
-                    if(epc == null) epc = "";
-                    json.put("epc", epc);
+            if(cmd == CMD.REAL_TIME_INVENTORY) {
+                String epc = tag.getString(ParamCts.TAG_EPC);
+                if(epc == null) epc = "";
+                ret.put("epc", epc);
 
-                    String pc = tag.getString(ParamCts.TAG_PC);
-                    if(pc == null) pc = "";
-                    json.put("pc", pc);
+                String pc = tag.getString(ParamCts.TAG_PC);
+                if(pc == null) pc = "";
+                ret.put("pc", pc);
 
-                    String frequency = tag.getString(ParamCts.TAG_FREQ);
-                    if(frequency == null) frequency = "";
-                    json.put("frequency", frequency);
+                String frequency = tag.getString(ParamCts.TAG_FREQ);
+                if(frequency == null) frequency = "";
+                ret.put("frequency", frequency);
 
-                    String rrsi = tag.getString(ParamCts.TAG_RSSI);
-                    if(rrsi == null) rrsi = "";
-                    json.put("rrsi", rrsi);
+                String rrsi = tag.getString(ParamCts.TAG_RSSI);
+                if(rrsi == null) rrsi = "";
+                ret.put("rrsi", rrsi);
 
-                    int antenna = (int) tag.getByte(ParamCts.ANT_ID);
-                    json.put("antenna", antenna);
+                int antenna = (int) tag.getByte(ParamCts.ANT_ID);
+                ret.put("antenna", antenna);
 
-                    long last_updated = tag.getLong(ParamCts.TAG_TIME);
-                    json.put("last_updated", last_updated);
+                long last_updated = tag.getLong(ParamCts.TAG_TIME);
+                ret.put("last_updated", last_updated);
 
-                    int read_count = tag.getInt(ParamCts.TAG_READ_COUNT);
-                    json.put("read_count", read_count);
+                int read_count = tag.getInt(ParamCts.TAG_READ_COUNT);
+                ret.put("read_count", read_count);
 
-                    bridge.triggerWindowJSEvent("sunmi_uhf_tag_read", json.toString());
+                PluginCall call = getTagReadCallback();
+                if (call != null) {
+                    call.resolve(ret);
                 } else {
-                    json.put("action", "onTag");
-                    json.put("cmd", cmd);
-                    json.put("state", state);
-                    json.put("tag", tag != null ? StrTools.normalizeHexStr(tag.toString(), true) : null);
-
-                    bridge.triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
+                    bridge.triggerWindowJSEvent("sunmi_uhf_tag_read", ret.toString());
                 }
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
+            } else {
+                ret.put("action", "onTag");
+                ret.put("cmd", cmd);
+                ret.put("state", state);
+                ret.put("tag", tag != null ? StrTools.normalizeHexStr(tag.toString(), true) : null);
+
+                bridge.triggerWindowJSEvent("sunmi_uhf_debug", ret.toString());
             }
         }
 
@@ -133,6 +133,9 @@ public class RFID6CTagInventory {
             }
         }
     };
+
+    private String tagReadCallbackId = null;
+    private String inventoryScanCompletedCallbackId = null;
 
     public void stopScanning(RFIDHelper helper, PluginCall call, Bridge bridge) {
         state = false;
@@ -156,5 +159,63 @@ public class RFID6CTagInventory {
     private void stop(RFIDHelper helper) {
         helper.inventory((byte) 1);
         helper.unregisterReaderCall();
+        clearTagReadCallback(bridge);
+        clearInventoryScanCompletedCallback(bridge);
+    }
+
+    @Nullable
+    protected PluginCall getTagReadCallback() {
+        if(tagReadCallbackId == null) {
+            return null;
+        }
+
+        return bridge.getSavedCall(tagReadCallbackId);
+    }
+
+    public void setTagReadCallback(RFIDHelper helper, PluginCall call, Bridge bridge) {
+        if(tagReadCallbackId != null) {
+            clearTagReadCallback(bridge);
+        }
+
+        call.setKeepAlive(true);
+        tagReadCallbackId = call.getCallbackId();
+        bridge.saveCall(call);
+    }
+
+    public void clearTagReadCallback(Bridge bridge) {
+        if(tagReadCallbackId == null) {
+            return;
+        }
+
+        bridge.releaseCall(tagReadCallbackId);
+        tagReadCallbackId = null;
+    }
+
+    @Nullable
+    protected PluginCall getInventoryScanCompletedCallback() {
+        if(inventoryScanCompletedCallbackId == null) {
+            return null;
+        }
+
+        return bridge.getSavedCall(inventoryScanCompletedCallbackId);
+    }
+
+    public void setInventoryScanCompletedCallback(RFIDHelper helper, PluginCall call, Bridge bridge) {
+        if(inventoryScanCompletedCallbackId != null) {
+            clearInventoryScanCompletedCallback(bridge);
+        }
+
+        call.setKeepAlive(true);
+        inventoryScanCompletedCallbackId = call.getCallbackId();
+        bridge.saveCall(call);
+    }
+
+    public void clearInventoryScanCompletedCallback(Bridge bridge) {
+        if(inventoryScanCompletedCallbackId == null) {
+            return;
+        }
+
+        bridge.releaseCall(inventoryScanCompletedCallbackId);
+        inventoryScanCompletedCallbackId = null;
     }
 }

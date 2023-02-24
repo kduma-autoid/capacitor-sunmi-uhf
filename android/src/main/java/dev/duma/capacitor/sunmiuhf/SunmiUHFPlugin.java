@@ -2,25 +2,12 @@ package dev.duma.capacitor.sunmiuhf;
 
 import android.os.RemoteException;
 
-import androidx.annotation.Nullable;
-
-import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.sunmi.rfid.RFIDHelper;
 import com.sunmi.rfid.RFIDManager;
-import com.sunmi.rfid.ReaderCall;
-import com.sunmi.rfid.constant.CMD;
-import com.sunmi.rfid.constant.ParamCts;
-import com.sunmi.rfid.entity.DataParameter;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Objects;
 
 import dev.duma.capacitor.sunmiuhf.internals.RFID6CTagInventory;
 import dev.duma.capacitor.sunmiuhf.internals.RFID6CTagOperations;
@@ -60,6 +47,50 @@ public class SunmiUHFPlugin extends Plugin {
             RFIDHelper helper = getRfidHelper();
 
             tagInventory.startScanning(helper, call, bridge);
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod(returnType = PluginMethod.RETURN_CALLBACK)
+    public void setTagReadCallback(PluginCall call) {
+        try {
+            RFIDHelper helper = getRfidHelper();
+
+            tagInventory.setTagReadCallback(helper, call, bridge);
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod(returnType = PluginMethod.RETURN_NONE)
+    public void clearTagReadCallback(PluginCall call) {
+        try {
+            RFIDHelper helper = getRfidHelper();
+
+            tagInventory.clearTagReadCallback(bridge);
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod(returnType = PluginMethod.RETURN_CALLBACK)
+    public void setInventoryScanCompletedCallback(PluginCall call) {
+        try {
+            RFIDHelper helper = getRfidHelper();
+
+            tagInventory.setInventoryScanCompletedCallback(helper, call, bridge);
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod(returnType = PluginMethod.RETURN_NONE)
+    public void clearInventoryScanCompletedCallback(PluginCall call) {
+        try {
+            RFIDHelper helper = getRfidHelper();
+
+            tagInventory.clearInventoryScanCompletedCallback(bridge);
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }
