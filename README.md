@@ -18,9 +18,13 @@ npx cap sync
 * [`stopScanning()`](#stopscanning)
 * [`readTag(...)`](#readtag)
 * [`writeTag(...)`](#writetag)
+* [`lockTag(...)`](#locktag)
+* [`killTag(...)`](#killtag)
 * [`setAccessEpcMatch(...)`](#setaccessepcmatch)
 * [`cancelAccessEpcMatch()`](#cancelaccessepcmatch)
 * [`getAccessEpcMatch()`](#getaccessepcmatch)
+* [`setImpinjFastTid(...)`](#setimpinjfasttid)
+* [`getImpinjFastTid()`](#getimpinjfasttid)
 
 </docgen-index>
 
@@ -96,6 +100,40 @@ Tag operation – write tags
 --------------------
 
 
+### lockTag(...)
+
+```typescript
+lockTag(options: { bank: "USER" | "TID" | "EPC" | "ACCESS_PASSWORD" | "KILL_PASSWORD"; type: "OPEN" | "LOCK" | "PERM_OPEM" | "PERM_LOCK"; password: string; }) => Promise<{ crc: string; pc: string; epc: string; details: { antenna: number; tag_read_count: number; start_time: number; end_time: number; }; }>
+```
+
+Tag operation – lock tags
+
+| Param         | Type                                                                                                                                                             |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ bank: 'EPC' \| 'TID' \| 'USER' \| 'ACCESS_PASSWORD' \| 'KILL_PASSWORD'; type: 'OPEN' \| 'LOCK' \| 'PERM_OPEM' \| 'PERM_LOCK'; password: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ crc: string; pc: string; epc: string; details: { antenna: number; tag_read_count: number; start_time: number; end_time: number; }; }&gt;</code>
+
+--------------------
+
+
+### killTag(...)
+
+```typescript
+killTag(options: { password: string; }) => Promise<{ crc: string; pc: string; epc: string; details: { antenna: number; tag_read_count: number; start_time: number; end_time: number; }; }>
+```
+
+Tag operation – kill tags
+
+| Param         | Type                               |
+| ------------- | ---------------------------------- |
+| **`options`** | <code>{ password: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ crc: string; pc: string; epc: string; details: { antenna: number; tag_read_count: number; start_time: number; end_time: number; }; }&gt;</code>
+
+--------------------
+
+
 ### setAccessEpcMatch(...)
 
 ```typescript
@@ -135,6 +173,36 @@ getAccessEpcMatch() => Promise<{ epc_match: string; details: { start_time: numbe
 Tag operation – get EPC match
 
 **Returns:** <code>Promise&lt;{ epc_match: string; details: { start_time: number; end_time: number; }; }&gt;</code>
+
+--------------------
+
+
+### setImpinjFastTid(...)
+
+```typescript
+setImpinjFastTid(options: { enable: boolean; save?: boolean; }) => Promise<{ details: { start_time: number; end_time: number; }; }>
+```
+
+Tag operation – set FastTID (only valid to some models of Impinj Monza tags)
+
+| Param         | Type                                              |
+| ------------- | ------------------------------------------------- |
+| **`options`** | <code>{ enable: boolean; save?: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;{ details: { start_time: number; end_time: number; }; }&gt;</code>
+
+--------------------
+
+
+### getImpinjFastTid()
+
+```typescript
+getImpinjFastTid() => Promise<{ status: number; details: { start_time: number; end_time: number; }; }>
+```
+
+Tag operation – inquire FastTID
+
+**Returns:** <code>Promise&lt;{ status: number; details: { start_time: number; end_time: number; }; }&gt;</code>
 
 --------------------
 

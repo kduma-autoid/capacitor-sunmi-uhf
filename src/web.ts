@@ -43,4 +43,12 @@ export class SunmiUHFWeb extends WebPlugin implements SunmiUHFPlugin {
     throw this.unimplemented('Not implemented on web.');
   }
 
+  getImpinjFastTid(): Promise<{ status: number; details: { start_time: number; end_time: number } }> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  setImpinjFastTid(): Promise<{ details: { start_time: number; end_time: number } }> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
 }

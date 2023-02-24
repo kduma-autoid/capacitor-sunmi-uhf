@@ -63,15 +63,13 @@ export interface SunmiUHFPlugin {
    * Tag operation – set FastTID (only valid to some models of Impinj Monza tags)
    *
    * @see 2.4.3.8. in docs
-   * @todo implement
    */
-  // setImpinjFastTid(options: { enable: boolean, save?: boolean }): Promise<{ details: { start_time: number, end_time: number } }>;
+  setImpinjFastTid(options: { enable: boolean, save?: boolean }): Promise<{ details: { start_time: number, end_time: number } }>;
 
   /**
    * Tag operation – inquire FastTID
    *
    * @see 2.4.3.9. in docs
-   * @todo implement
    */
-  // getImpinjFastTid(): Promise<{ status: number, details: { start_time: number, end_time: number } }>;
+  getImpinjFastTid(): Promise<{ status: number, details: { start_time: number, end_time: number } }>;
 }

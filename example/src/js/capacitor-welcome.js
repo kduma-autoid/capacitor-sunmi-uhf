@@ -1,5 +1,4 @@
 import { SplashScreen } from '@capacitor/splash-screen';
-import { Camera } from '@capacitor/camera';
 import { SunmiUHF } from '../../../src';
 
 window.customElements.define(
@@ -95,6 +94,10 @@ window.customElements.define(
         <button id='lockTag'>lockTag()</button>
         <button id='unlockTag'>(un)lockTag()</button>
         <button id='killTag' disabled>killTag()</button>
+        <hr>
+        <button id='setImpinjFastTid'>setImpinjFastTid(true)</button>
+        <button id='setImpinjFastTidOff'>setImpinjFastTid(false)</button>
+        <button id='getImpinjFastTid'>getImpinjFastTid()</button>
         
         <h2>List</h2>
       
@@ -246,7 +249,7 @@ window.customElements.define(
 
       self.shadowRoot.querySelector('#writeTagPsw').addEventListener('click', async function (e) {
         try {
-          let data = await SunmiUHF.writeTag({bank: 'RESERVED', address: 0, data: '12345678'});
+          let data = await SunmiUHF.writeTag({bank: 'RESERVED', address: 0, data: '1234567812345678'});
           const output = self.shadowRoot.querySelector('#output');
           output.innerHTML = "<b>writeTag(Psw):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
         } catch (error) {
@@ -257,7 +260,7 @@ window.customElements.define(
 
       self.shadowRoot.querySelector('#writeTagCls').addEventListener('click', async function (e) {
         try {
-          let data = await SunmiUHF.writeTag({bank: 'RESERVED', address: 0, data: '00000000', password: '12345678'});
+          let data = await SunmiUHF.writeTag({bank: 'RESERVED', address: 0, data: '0000000000000000', password: '12345678'});
           const output = self.shadowRoot.querySelector('#output');
           output.innerHTML = "<b>writeTag(Cls):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
         } catch (error) {
@@ -307,6 +310,39 @@ window.customElements.define(
         } catch (error) {
           const output = self.shadowRoot.querySelector('#output');
           output.innerHTML = "<b>getScanModel() - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
+      });
+
+      self.shadowRoot.querySelector('#setImpinjFastTid').addEventListener('click', async function (e) {
+        try {
+          const data = await SunmiUHF.setImpinjFastTid({enable: true});
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>setImpinjFastTid(true):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        } catch (error) {
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>setImpinjFastTid(true) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
+      });
+
+      self.shadowRoot.querySelector('#setImpinjFastTidOff').addEventListener('click', async function (e) {
+        try {
+          const data = await SunmiUHF.setImpinjFastTid({enable: false});
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>setImpinjFastTid(false):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        } catch (error) {
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>setImpinjFastTid(false) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+        }
+      });
+
+      self.shadowRoot.querySelector('#getImpinjFastTid').addEventListener('click', async function (e) {
+        try {
+          const data = await SunmiUHF.getImpinjFastTid();
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>getImpinjFastTid():</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+        } catch (error) {
+          const output = self.shadowRoot.querySelector('#output');
+          output.innerHTML = "<b>getImpinjFastTid() - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
         }
       });
 
