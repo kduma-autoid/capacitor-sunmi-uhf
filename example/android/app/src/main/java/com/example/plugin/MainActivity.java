@@ -1,4 +1,4 @@
-package com.example.plugin;
+package sh.duma.capacitor.sunmiuhf.example;
 
 import android.view.KeyEvent;
 

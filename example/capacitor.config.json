@@ -1,5 +1,5 @@
 {
-  "appId": "com.example.plugin",
+  "appId": "sh.duma.capacitor.sunmiuhf.example",
   "appName": "example",
   "bundledWebRuntime": false,
   "webDir": "dist",
