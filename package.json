@@ -16,10 +16,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kduma-sunmi/capacitor-sunmi-uhf.git"
+    "url": "git+https://github.com/kduma-autoid/capacitor-sunmi-uhf.git"
   },
   "bugs": {
-    "url": "https://github.com/kduma-sunmi/capacitor-sunmi-uhf/issues"
+    "url": "https://github.com/kduma-autoid/capacitor-sunmi-uhf/issues"
   },
   "keywords": [
     "capacitor",
