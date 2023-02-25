@@ -61,7 +61,7 @@ window.customElements.define(
     </style>
     <div>
       <capacitor-welcome-titlebar>
-        <h1>@kduma-sunmi/capacitor-sunmi-uhf</h1>
+        <h1>@kduma-autoid/capacitor-sunmi-uhf</h1>
       </capacitor-welcome-titlebar>
       <main>
         <div>

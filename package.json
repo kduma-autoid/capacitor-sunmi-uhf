@@ -1,5 +1,5 @@
 {
-  "name": "@kduma-sunmi/capacitor-sunmi-uhf",
+  "name": "@kduma-autoid/capacitor-sunmi-uhf",
   "version": "0.0.4",
   "description": "Binding for Sunmi's UHF module SDK",
   "main": "dist/plugin.cjs.js",

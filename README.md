@@ -1,11 +1,11 @@
-# @kduma-sunmi/capacitor-sunmi-uhf
+# @kduma-autoid/capacitor-sunmi-uhf
 
 Binding for Sunmi's UHF module SDK
 
 ## Install
 
 ```bash
-npm install @kduma-sunmi/capacitor-sunmi-uhf
+npm install @kduma-autoid/capacitor-sunmi-uhf
 npx cap sync
 ```
 

@@ -18,8 +18,8 @@
     "@capacitor/core": "latest",
     "@capacitor/ios": "^4.0.0",
     "@capacitor/splash-screen": "latest",
-    "@kduma-sunmi/capacitor-sunmi-keyboard-handler": "^0.0.3",
-    "@kduma-sunmi/capacitor-sunmi-uhf": "file:.."
+    "@kduma-autoid/capacitor-sunmi-keyboard-handler": "^0.0.3",
+    "@kduma-autoid/capacitor-sunmi-uhf": "file:.."
   },
   "devDependencies": {
     "@capacitor/cli": "latest",
