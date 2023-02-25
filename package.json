@@ -1,6 +1,6 @@
 {
   "name": "@kduma-autoid/capacitor-sunmi-uhf",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "description": "Binding for Sunmi's UHF module SDK",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -24,7 +24,11 @@
   "keywords": [
     "capacitor",
     "plugin",
-    "native"
+    "native",
+    "sunmi",
+    "uhf",
+    "rfid",
+    "autoid"
   ],
   "scripts": {
     "verify": "npm run verify:ios && npm run verify:android && npm run verify:web",
@@ -57,7 +61,6 @@
     "@capacitor/core": "^4.0.0"
   },
   "prettier": "@ionic/prettier-config",
-  "swiftlint": "@ionic/swiftlint-config",
   "eslintConfig": {
     "extends": "@ionic/eslint-config/recommended"
   },
