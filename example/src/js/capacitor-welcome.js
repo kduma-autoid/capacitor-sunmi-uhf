@@ -1,5 +1,6 @@
 import { SplashScreen } from '@capacitor/splash-screen';
 import { SunmiUHF } from '../../../src';
+import { SunmiKeyboardHandler, HandleableKey, KeyEvent } from '@kduma-autoid/capacitor-sunmi-keyboard-handler';
 
 window.customElements.define(
   'capacitor-welcome',
@@ -418,8 +419,8 @@ window.customElements.define(
       }, false);
 
 
-      window.addEventListener('sunmi_shortcut_key', async (e) => {
-        if (e.pressed) {
+      SunmiKeyboardHandler.setKeyHandler({ key: HandleableKey.L2s_Shortcut_or_RFID }, async (e) => {
+        if (e.type == KeyEvent.KeyDown) {
           const first_epc = self.shadowRoot.querySelector('#first_epc');
           first_epc.innerHTML = "first";
           const output = self.shadowRoot.querySelector('#output');
@@ -433,7 +434,7 @@ window.customElements.define(
         } else {
           await SunmiUHF.stopScanning();
         }
-      }, false);
+      });
     }
   }
 );
