@@ -419,7 +419,7 @@ window.customElements.define(
       }, false);
 
 
-      SunmiKeyboardHandler.setKeyHandler({ key: HandleableKey.L2s_Shortcut_or_RFID }, async (e) => {
+      let handler = async (e) => {
         if (e.type == KeyEvent.KeyDown) {
           const first_epc = self.shadowRoot.querySelector('#first_epc');
           first_epc.innerHTML = "first";
@@ -434,7 +434,10 @@ window.customElements.define(
         } else {
           await SunmiUHF.stopScanning();
         }
-      });
+      };
+
+      SunmiKeyboardHandler.setKeyHandler({ key: HandleableKey.L2s_Shortcut_or_RFID }, handler);
+      SunmiKeyboardHandler.setKeyHandler({ key: HandleableKey.L2k_RFID }, handler);
     }
   }
 );

@@ -12,4 +12,4 @@ include ':kduma-autoid-capacitor-sunmi-keyboard-handler'
 project(':kduma-autoid-capacitor-sunmi-keyboard-handler').projectDir = new File('../node_modules/@kduma-autoid/capacitor-sunmi-keyboard-handler/android')
 
 include ':kduma-autoid-capacitor-sunmi-uhf'
-project(':kduma-autoid-capacitor-sunmi-uhf').projectDir = new File('../node_modules/@kduma-autoid/capacitor-sunmi-uhf/android')
+project(':kduma-autoid-capacitor-sunmi-uhf').projectDir = new File('../../android')
