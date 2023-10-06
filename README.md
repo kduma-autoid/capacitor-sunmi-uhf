@@ -1,6 +1,6 @@
 # @kduma-autoid/capacitor-sunmi-uhf
 
-Binding for Sunmi's UHF module SDK
+Capacitor plugin for communication with Sunmi's UHF module SDK
 
 ## Install
 

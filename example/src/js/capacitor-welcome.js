@@ -1,6 +1,7 @@
 import { SplashScreen } from '@capacitor/splash-screen';
 import { SunmiUHF } from '../../../src';
 import { SunmiKeyboardHandler, HandleableKey, KeyEvent } from '@kduma-autoid/capacitor-sunmi-keyboard-handler';
+import { WebViewWatchDog } from "@kduma-autoid/capacitor-webview-watchdog";
 
 window.customElements.define(
   'capacitor-welcome',
@@ -13,6 +14,7 @@ window.customElements.define(
       super();
 
       SplashScreen.hide();
+      WebViewWatchDog.ping();
 
       const root = this.attachShadow({ mode: 'open' });
 
@@ -111,9 +113,13 @@ window.customElements.define(
     </div>
     `;
     }
-
     connectedCallback() {
       const self = this;
+
+      function printToOutput(key, content) {
+        const output = self.shadowRoot.querySelector('#output');
+        output.innerHTML = "<b>" + key + ":</b><br><pre><code>" + JSON.stringify(content, null, 3) + "</code></pre><hr>" + output.innerHTML;
+      }
 
       self.shadowRoot.querySelector('#start_scan').addEventListener('click', async function (e) {
         try {
@@ -128,8 +134,7 @@ window.customElements.define(
 
           await SunmiUHF.startScanning();
         } catch (error) {
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>startScanning() - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('startScanning() - ERROR', { code: error.code, message: error.message });
         }
       });
 
@@ -146,8 +151,7 @@ window.customElements.define(
 
           await SunmiUHF.startScanning({ repeat_times: 255});
         } catch (error) {
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>startScanning(255) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('startScanning(255) - ERROR', { code: error.code, message: error.message });
         }
       });
 
@@ -162,18 +166,11 @@ window.customElements.define(
           this.tags = [];
           this.reads = 0;
 
-          await SunmiUHF.setTagReadCallback((tag) => {
-            const output = self.shadowRoot.querySelector('#output');
-            output.innerHTML = "<b>setTagReadCallback():</b><br><pre>" + JSON.stringify(tag, null, 3) + "</pre><hr>" + output.innerHTML;
-          });
-          await SunmiUHF.setInventoryScanCompletedCallback((scan) => {
-            const output = self.shadowRoot.querySelector('#output');
-            output.innerHTML = "<b>setInventoryScanCompletedCallback():</b><br><pre>" + JSON.stringify(scan, null, 3) + "</pre><hr>" + output.innerHTML;
-          });
+          await SunmiUHF.setTagReadCallback((tag) => printToOutput('setTagReadCallback()', tag));
+          await SunmiUHF.setInventoryScanCompletedCallback((scan) => printToOutput('setInventoryScanCompletedCallback()', scan));
           await SunmiUHF.startScanning();
         } catch (error) {
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>startScanning(255) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('startScanning(255) - ERROR', { code: error.code, message: error.message });
         }
       });
 
@@ -181,209 +178,180 @@ window.customElements.define(
         try {
           await SunmiUHF.stopScanning();
         } catch (error) {
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>stopScanning() - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('stopScanning() - ERROR', { code: error.code, message: error.message });
         }
       });
 
       self.shadowRoot.querySelector('#setAccessEpcMatch').addEventListener('click', async function (e) {
         const first_epc = self.shadowRoot.querySelector('#first_epc');
+
+        if (first_epc.innerHTML == "first") {
+          return;
+        }
+
         try {
           const data = await SunmiUHF.setAccessEpcMatch({ epc: first_epc.innerHTML });
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>setAccessEpcMatch("+first_epc.innerHTML+"):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('setAccessEpcMatch('+first_epc.innerHTML+')', data);
         } catch (error) {
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>setAccessEpcMatch("+first_epc.innerHTML+") - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('setAccessEpcMatch('+first_epc.innerHTML+') - ERROR', { code: error.code, message: error.message });
         }
       });
 
       self.shadowRoot.querySelector('#cancelAccessEpcMatch').addEventListener('click', async function (e) {
         try {
           const data = await SunmiUHF.cancelAccessEpcMatch();
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>cancelAccessEpcMatch():</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('cancelAccessEpcMatch()', data);
         } catch (error) {
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>cancelAccessEpcMatch() - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('cancelAccessEpcMatch() - ERROR', { code: error.code, message: error.message });
         }
       });
 
       self.shadowRoot.querySelector('#getAccessEpcMatch').addEventListener('click', async function (e) {
         try {
           const data = await SunmiUHF.getAccessEpcMatch();
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>getAccessEpcMatch():</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('getAccessEpcMatch()', data);
         } catch (error) {
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>getAccessEpcMatch() - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('getAccessEpcMatch() - ERROR', { code: error.code, message: error.message });
         }
       });
 
       self.shadowRoot.querySelector('#readTag').addEventListener('click', async function (e) {
-        const output = self.shadowRoot.querySelector('#output');
         let data = "";
 
         try {
           data = await SunmiUHF.readTag({bank: 'EPC', address: 0, length: 8});
-          output.innerHTML = "<b>readTag('EPC', 0, 8):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('readTag(\'EPC\', 0, 8)', data);
         } catch (error) {
-          output.innerHTML = "<b>readTag('EPC', 0, 8) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('readTag(\'EPC\', 0, 8) - ERROR', { code: error.code, message: error.message });
         }
 
         try {
           data = await SunmiUHF.readTag({bank: 'TID', address: 0, length: 6});
-          output.innerHTML = "<b>readTag('TID', 0, 6):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('readTag(\'TID\', 0, 6)', data);
         } catch (error) {
-          output.innerHTML = "<b>readTag('TID', 0, 6) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('readTag(\'TID\', 0, 6) - ERROR', { code: error.code, message: error.message });
         }
 
         try {
           data = await SunmiUHF.readTag({bank: 'USER', address: 0, length: 2});
-          output.innerHTML = "<b>readTag('USER', 0, 2):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('readTag(\'USER\', 0, 2', data);
         } catch (error) {
-          output.innerHTML = "<b>readTag('USER', 0, 2) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('readTag(\'USER\', 0, 2) - ERROR', { code: error.code, message: error.message });
         }
 
         try {
           data = await SunmiUHF.readTag({bank: 'RESERVED', address: 0, length: 4});
-          output.innerHTML = "<b>readTag('RESERVED', 0, 4):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('readTag(\'RESERVED\', 0, 4)', data);
         } catch (error) {
-          output.innerHTML = "<b>readTag('RESERVED', 0, 4) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('readTag(\'RESERVED\', 0, 4) - ERROR', { code: error.code, message: error.message });
         }
       });
 
       self.shadowRoot.querySelector('#writeTag00').addEventListener('click', async function (e) {
         try {
           let data = await SunmiUHF.writeTag({bank: 'USER', address: 0, data: '00 00'});
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>writeTag(00 00):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('writeTag(00 00)', data);
         } catch (error) {
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>writeTag(00 00) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('writeTag(00 00) - ERROR', { code: error.code, message: error.message });
         }
       });
 
       self.shadowRoot.querySelector('#writeTagFF').addEventListener('click', async function (e) {
         try {
           let data = await SunmiUHF.writeTag({bank: 'USER', address: 0, data: 'FF FF'});
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>writeTag(FF FF):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('writeTag(FF FF)', data);
         } catch (error) {
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>writeTag(FF FF) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('writeTag(FF FF) - ERROR', { code: error.code, message: error.message });
         }
       });
 
       self.shadowRoot.querySelector('#writeTagPsw').addEventListener('click', async function (e) {
         try {
           let data = await SunmiUHF.writeTag({bank: 'RESERVED', address: 0, data: '1234567812345678'});
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>writeTag(Psw):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('writeTag(Psw)', data);
         } catch (error) {
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>writeTag(Psw) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('writeTag(Psw) - ERROR', { code: error.code, message: error.message });
         }
       });
 
       self.shadowRoot.querySelector('#writeTagCls').addEventListener('click', async function (e) {
         try {
           let data = await SunmiUHF.writeTag({bank: 'RESERVED', address: 0, data: '0000000000000000', password: '12345678'});
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>writeTag(Cls):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('writeTag(Cls)', data);
         } catch (error) {
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>writeTag(Cls) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('writeTag(Cls) - ERROR', { code: error.code, message: error.message });
         }
       });
 
       self.shadowRoot.querySelector('#lockTag').addEventListener('click', async function (e) {
         try {
           let data = await SunmiUHF.lockTag({bank: 'USER', type: 'LOCK', password: '12345678'});
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>lockTag():</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('lockTag()', data);
         } catch (error) {
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>lockTag() - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('lockTag() - ERROR', { code: error.code, message: error.message });
         }
       });
 
       self.shadowRoot.querySelector('#unlockTag').addEventListener('click', async function (e) {
         try {
           let data = await SunmiUHF.lockTag({bank: 'USER', type: 'OPEN', password: '12345678'});
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>(un)lockTag():</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('(un)lockTag()', data);
         } catch (error) {
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>(un)lockTag() - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('(un)lockTag() - ERROR', { code: error.code, message: error.message });
         }
       });
 
       self.shadowRoot.querySelector('#killTag').addEventListener('click', async function (e) {
         try {
           let data = await SunmiUHF.killTag({password: '12345678'});
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>killTag():</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('killTag()', data);
         } catch (error) {
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>killTag() - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('killTag() - ERROR', { code: error.code, message: error.message });
         }
       });
 
       self.shadowRoot.querySelector('#get_model').addEventListener('click', async function (e) {
         try {
           const data = await SunmiUHF.getScanModel();
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>getScanModel():</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('getScanModel()', data);
         } catch (error) {
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>getScanModel() - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('getScanModel() - ERROR', { code: error.code, message: error.message });
         }
       });
 
       self.shadowRoot.querySelector('#setImpinjFastTid').addEventListener('click', async function (e) {
         try {
           const data = await SunmiUHF.setImpinjFastTid({enable: true});
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>setImpinjFastTid(true):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('setImpinjFastTid(true)', data);
         } catch (error) {
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>setImpinjFastTid(true) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('setImpinjFastTid(true) - ERROR', { code: error.code, message: error.message });
         }
       });
 
       self.shadowRoot.querySelector('#setImpinjFastTidOff').addEventListener('click', async function (e) {
         try {
           const data = await SunmiUHF.setImpinjFastTid({enable: false});
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>setImpinjFastTid(false):</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('setImpinjFastTid(false)', data);
         } catch (error) {
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>setImpinjFastTid(false) - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('setImpinjFastTid(false) - ERROR', { code: error.code, message: error.message });
         }
       });
 
       self.shadowRoot.querySelector('#getImpinjFastTid').addEventListener('click', async function (e) {
         try {
           const data = await SunmiUHF.getImpinjFastTid();
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>getImpinjFastTid():</b><br><pre>" + JSON.stringify(data, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('getImpinjFastTid()', data);
         } catch (error) {
-          const output = self.shadowRoot.querySelector('#output');
-          output.innerHTML = "<b>getImpinjFastTid() - ERROR:</b><br><pre>" + JSON.stringify({ code: error.code, message: error.message }, null, 3) + "</pre><hr>" + output.innerHTML;
+          printToOutput('getImpinjFastTid() - ERROR', { code: error.code, message: error.message });
         }
       });
 
       window.addEventListener('sunmi_uhf_debug', (e) => {
-        const output = self.shadowRoot.querySelector('#output');
-        output.innerHTML = "<b>sunmi_uhf_debug:</b><br><pre>" + JSON.stringify(e, null, 3) + "</pre><hr>" + output.innerHTML;
-
-        console.log(e);
+        printToOutput('sunmi_uhf_debug', e);
       }, false);
 
       window.addEventListener('sunmi_uhf_read_completed', (e) => {
-        const output = self.shadowRoot.querySelector('#output');
-        output.innerHTML = "<b>sunmi_uhf_read_completed:</b><br><pre>" + JSON.stringify(e, null, 3) + "</pre><hr>" + output.innerHTML;
+        printToOutput('sunmi_uhf_read_completed', e);
 
         const rate = self.shadowRoot.querySelector('#rate');
         rate.innerHTML = e.rate;
@@ -394,8 +362,7 @@ window.customElements.define(
 
 
       window.addEventListener('sunmi_uhf_tag_read', (e) => {
-        const output = self.shadowRoot.querySelector('#output');
-        output.innerHTML = "<b>sunmi_uhf_tag_read:</b><br><pre>" + JSON.stringify(e, null, 3) + "</pre><hr>" + output.innerHTML;
+        printToOutput('sunmi_uhf_tag_read', e);
 
         const first_epc = self.shadowRoot.querySelector('#first_epc');
         if(first_epc.innerHTML == "first"){
@@ -417,7 +384,6 @@ window.customElements.define(
 
         console.log(e);
       }, false);
-
 
       let handler = async (e) => {
         if (e.type === KeyEvent.KeyDown) {

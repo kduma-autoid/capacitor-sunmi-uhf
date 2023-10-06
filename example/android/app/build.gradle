@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "sh.duma.capacitor.sunmiuhf.example"
+    namespace "dev.duma.capacitor.sunmiuhf.example"
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "sh.duma.capacitor.sunmiuhf.example"
+        applicationId "dev.duma.capacitor.sunmiuhf.example"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "1.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.

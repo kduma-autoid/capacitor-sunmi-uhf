@@ -1,29 +1,36 @@
 {
   "name": "capacitor-app",
-  "version": "1.0.0",
-  "description": "An Amazing Capacitor App",
+  "version": "1.1.0",
+  "description": "Sunmi UHF plugin for Capacitor.js",
   "main": "index.js",
   "keywords": [
     "capacitor",
     "mobile"
   ],
   "scripts": {
+    "verify": "npm run verify:android && npm run verify:web",
+    "verify:android": "npx cap sync android",
+    "verify:web": "npm run build:web",
     "start": "vite",
-    "build": "vite build",
-    "ionic:build": "vite build",
-    "preview": "vite preview"
+    "build": "npm run build:android",
+    "build:android": "npm run build:web && npx cap sync android",
+    "build:web": "npm run cap-config && vite build",
+    "preview": "vite preview",
+    "cap-config": "npx trapeze run config.yaml --diff -y"
   },
   "dependencies": {
     "@capacitor/android": "^5.0.0",
-    "@capacitor/camera": "^5.0.0",
-    "@capacitor/core": "^5.0.0",
+    "@capacitor/camera": "latest",
+    "@capacitor/core": "latest",
     "@capacitor/ios": "^5.0.0",
-    "@capacitor/splash-screen": "^5.0.0",
-    "@kduma-autoid/capacitor-sunmi-keyboard-handler": "^0.1.0",
-    "@kduma-autoid/capacitor-sunmi-uhf": "file:.."
+    "@capacitor/splash-screen": "latest",
+    "@kduma-autoid/capacitor-sunmi-keyboard-handler": "^0.2.3",
+    "@kduma-autoid/capacitor-sunmi-uhf": "file:..",
+    "@kduma-autoid/capacitor-webview-watchdog": "^0.0.3",
+    "@trapezedev/configure": "^7.0.10"
   },
   "devDependencies": {
-    "@capacitor/cli": "^5.0.0",
+    "@capacitor/cli": "latest",
     "vite": "^2.9.13"
   },
   "author": "",

@@ -1,8 +1,8 @@
-package sh.duma.capacitor.sunmiuhf.example;
-
-import android.view.KeyEvent;
+package dev.duma.capacitor.sunmiuhf.example;
 
 import com.getcapacitor.BridgeActivity;
+
+import android.view.KeyEvent;
 
 import dev.duma.capacitor.sunmikeyboardhandler.HasKeyHandlersInterface;
 import dev.duma.capacitor.sunmikeyboardhandler.KeyHandlerInterface;

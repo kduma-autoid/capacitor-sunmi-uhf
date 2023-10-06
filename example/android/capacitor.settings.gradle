@@ -13,3 +13,6 @@ project(':kduma-autoid-capacitor-sunmi-keyboard-handler').projectDir = new File(
 
 include ':kduma-autoid-capacitor-sunmi-uhf'
 project(':kduma-autoid-capacitor-sunmi-uhf').projectDir = new File('../../android')
+
+include ':kduma-autoid-capacitor-webview-watchdog'
+project(':kduma-autoid-capacitor-webview-watchdog').projectDir = new File('../node_modules/@kduma-autoid/capacitor-webview-watchdog/android')

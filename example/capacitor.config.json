@@ -1,11 +1,14 @@
 {
-  "appId": "sh.duma.capacitor.sunmiuhf.example",
+  "appId": "com.example.plugin",
   "appName": "example",
   "bundledWebRuntime": false,
   "webDir": "dist",
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 0
+    },
+    "WebViewWatchDog": {
+      "launchFailedHelpUrl": "https://autoid.duma.sh/watchdog/error/no-web-view"
     }
   }
 }
