@@ -22,6 +22,12 @@ import dev.duma.capacitor.sunmiuhf.StrTools;
 import dev.duma.capacitor.sunmiuhf.SunmiUHF;
 
 public class RFID6CTagOperations {
+    private final SunmiUHF uhf;
+
+    public RFID6CTagOperations(SunmiUHF uhf) {
+        this.uhf = uhf;
+    }
+
     public void setImpinjFastTid(PluginCall call, Bridge bridge) {
         RFIDHelper helper = SunmiUHF.getRfidHelper();
 

@@ -27,6 +27,30 @@ export class SunmiUHFWeb extends WebPlugin implements SunmiUHFPlugin {
     throw this.unimplemented('Not implemented on web.');
   }
 
+  getBatteryChargeState(): Promise<void> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  getBatteryRemainingPercent(): Promise<void> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  getBatteryChargeNumTimes(): Promise<void> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  getBatteryVoltage(): Promise<void> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  getFirmwareVersion(): Promise<void> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  getReaderSN(): Promise<void> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
   stopScanning(): Promise<void> {
     throw this.unimplemented('Not implemented on web.');
   }

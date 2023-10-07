@@ -82,7 +82,13 @@ window.customElements.define(
         <button id='start_scan_callback'>startScanning(callback)</button>
         <button id='stop_scan'>stopScanning()</button>
         <hr>
-        <button id='get_model'>getScanModel</button>
+        <button id='getScanModel'>getScanModel()</button>
+        <button id='getBatteryChargeState'>getBatteryChargeState()</button>
+        <button id='getBatteryRemainingPercent'>getBatteryRemainingPercent()</button>
+        <button id='getBatteryChargeNumTimes'>getBatteryChargeNumTimes()</button>
+        <button id='getBatteryVoltage'>getBatteryVoltage()</button>
+        <button id='getFirmwareVersion'>getFirmwareVersion()</button>
+        <button id='getReaderSN'>getReaderSN()</button>
         <hr>
         <button id='setAccessEpcMatch'>setAccessEpcMatch(<span id='first_epc'>first</span>')</button>
         <button id='cancelAccessEpcMatch'>cancelAccessEpcMatch()</button>
@@ -174,14 +180,6 @@ window.customElements.define(
         }
       });
 
-      self.shadowRoot.querySelector('#stop_scan').addEventListener('click', async function (e) {
-        try {
-          await SunmiUHF.stopScanning();
-        } catch (error) {
-          printToOutput('stopScanning() - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
       self.shadowRoot.querySelector('#setAccessEpcMatch').addEventListener('click', async function (e) {
         const first_epc = self.shadowRoot.querySelector('#first_epc');
 
@@ -194,24 +192,6 @@ window.customElements.define(
           printToOutput('setAccessEpcMatch('+first_epc.innerHTML+')', data);
         } catch (error) {
           printToOutput('setAccessEpcMatch('+first_epc.innerHTML+') - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
-      self.shadowRoot.querySelector('#cancelAccessEpcMatch').addEventListener('click', async function (e) {
-        try {
-          const data = await SunmiUHF.cancelAccessEpcMatch();
-          printToOutput('cancelAccessEpcMatch()', data);
-        } catch (error) {
-          printToOutput('cancelAccessEpcMatch() - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
-      self.shadowRoot.querySelector('#getAccessEpcMatch').addEventListener('click', async function (e) {
-        try {
-          const data = await SunmiUHF.getAccessEpcMatch();
-          printToOutput('getAccessEpcMatch()', data);
-        } catch (error) {
-          printToOutput('getAccessEpcMatch() - ERROR', { code: error.code, message: error.message });
         }
       });
 
@@ -247,104 +227,99 @@ window.customElements.define(
         }
       });
 
-      self.shadowRoot.querySelector('#writeTag00').addEventListener('click', async function (e) {
-        try {
-          let data = await SunmiUHF.writeTag({bank: 'USER', address: 0, data: '00 00'});
-          printToOutput('writeTag(00 00)', data);
-        } catch (error) {
-          printToOutput('writeTag(00 00) - ERROR', { code: error.code, message: error.message });
+      const handlers = {
+        'stop_scan': {
+          'tag': 'stopScanning()',
+          'handler': async () => await SunmiUHF.stopScanning()
+        },
+        'cancelAccessEpcMatch': {
+          'tag': 'cancelAccessEpcMatch()',
+          'handler': async () => await SunmiUHF.cancelAccessEpcMatch()
+        },
+        'getAccessEpcMatch': {
+          'tag': 'getAccessEpcMatch()',
+          'handler': async () => await SunmiUHF.getAccessEpcMatch()
+        },
+        'writeTag00': {
+          'tag': 'writeTag(00 00)',
+          'handler': async () => await SunmiUHF.writeTag({bank: 'USER', address: 0, data: '00 00'})
+        },
+        'writeTagFF': {
+          'tag': 'writeTag(FF FF)',
+          'handler': async () => await SunmiUHF.writeTag({bank: 'USER', address: 0, data: 'FF FF'})
+        },
+        'writeTagPsw': {
+          'tag': 'writeTag(Psw)',
+          'handler': async () => await SunmiUHF.writeTag({bank: 'RESERVED', address: 0, data: '1234567812345678'})
+        },
+        'writeTagCls': {
+          'tag': 'writeTag(Cls)',
+          'handler': async () => await SunmiUHF.writeTag({bank: 'RESERVED', address: 0, data: '0000000000000000', password: '12345678'})
+        },
+        'lockTag': {
+          'tag': 'lockTag()',
+          'handler': async () => await SunmiUHF.lockTag({bank: 'USER', type: 'LOCK', password: '12345678'})
+        },
+        'unlockTag': {
+          'tag': '(un)lockTag()',
+          'handler': async () => await SunmiUHF.lockTag({bank: 'USER', type: 'OPEN', password: '12345678'})
+        },
+        'killTag': {
+          'tag': 'killTag()',
+          'handler': async () => await SunmiUHF.killTag({password: '12345678'})
+        },
+        'getScanModel': {
+          'tag': 'getScanModel()',
+          'handler': async () => await SunmiUHF.getScanModel()
+        },
+        'getBatteryChargeState': {
+          'tag': 'getBatteryChargeState()',
+          'handler': async () => await SunmiUHF.getBatteryChargeState()
+        },
+        'getBatteryRemainingPercent': {
+          'tag': 'getBatteryRemainingPercent()',
+          'handler': async () => await SunmiUHF.getBatteryRemainingPercent()
+        },
+        'getBatteryChargeNumTimes': {
+          'tag': 'getBatteryChargeNumTimes()',
+          'handler': async () => await SunmiUHF.getBatteryChargeNumTimes()
+        },
+        'getBatteryVoltage': {
+          'tag': 'getBatteryVoltage()',
+          'handler': async () => await SunmiUHF.getBatteryVoltage()
+        },
+        'getFirmwareVersion': {
+          'tag': 'getFirmwareVersion()',
+          'handler': async () => await SunmiUHF.getFirmwareVersion()
+        },
+        'getReaderSN': {
+          'tag': 'getReaderSN()',
+          'handler': async () => await SunmiUHF.getReaderSN()
+        },
+        'setImpinjFastTid': {
+          'tag': 'setImpinjFastTid(true)',
+          'handler': async () => await SunmiUHF.setImpinjFastTid({enable: true})
+        },
+        'setImpinjFastTidOff': {
+          'tag': 'setImpinjFastTid(false)',
+          'handler': async () => await SunmiUHF.setImpinjFastTid({enable: false})
+        },
+        'getImpinjFastTid': {
+          'tag': 'getImpinjFastTid()',
+          'handler': async () => await SunmiUHF.setImpinjFastTid({enable: false})
         }
-      });
+      }
 
-      self.shadowRoot.querySelector('#writeTagFF').addEventListener('click', async function (e) {
-        try {
-          let data = await SunmiUHF.writeTag({bank: 'USER', address: 0, data: 'FF FF'});
-          printToOutput('writeTag(FF FF)', data);
-        } catch (error) {
-          printToOutput('writeTag(FF FF) - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
-      self.shadowRoot.querySelector('#writeTagPsw').addEventListener('click', async function (e) {
-        try {
-          let data = await SunmiUHF.writeTag({bank: 'RESERVED', address: 0, data: '1234567812345678'});
-          printToOutput('writeTag(Psw)', data);
-        } catch (error) {
-          printToOutput('writeTag(Psw) - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
-      self.shadowRoot.querySelector('#writeTagCls').addEventListener('click', async function (e) {
-        try {
-          let data = await SunmiUHF.writeTag({bank: 'RESERVED', address: 0, data: '0000000000000000', password: '12345678'});
-          printToOutput('writeTag(Cls)', data);
-        } catch (error) {
-          printToOutput('writeTag(Cls) - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
-      self.shadowRoot.querySelector('#lockTag').addEventListener('click', async function (e) {
-        try {
-          let data = await SunmiUHF.lockTag({bank: 'USER', type: 'LOCK', password: '12345678'});
-          printToOutput('lockTag()', data);
-        } catch (error) {
-          printToOutput('lockTag() - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
-      self.shadowRoot.querySelector('#unlockTag').addEventListener('click', async function (e) {
-        try {
-          let data = await SunmiUHF.lockTag({bank: 'USER', type: 'OPEN', password: '12345678'});
-          printToOutput('(un)lockTag()', data);
-        } catch (error) {
-          printToOutput('(un)lockTag() - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
-      self.shadowRoot.querySelector('#killTag').addEventListener('click', async function (e) {
-        try {
-          let data = await SunmiUHF.killTag({password: '12345678'});
-          printToOutput('killTag()', data);
-        } catch (error) {
-          printToOutput('killTag() - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
-      self.shadowRoot.querySelector('#get_model').addEventListener('click', async function (e) {
-        try {
-          const data = await SunmiUHF.getScanModel();
-          printToOutput('getScanModel()', data);
-        } catch (error) {
-          printToOutput('getScanModel() - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
-      self.shadowRoot.querySelector('#setImpinjFastTid').addEventListener('click', async function (e) {
-        try {
-          const data = await SunmiUHF.setImpinjFastTid({enable: true});
-          printToOutput('setImpinjFastTid(true)', data);
-        } catch (error) {
-          printToOutput('setImpinjFastTid(true) - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
-      self.shadowRoot.querySelector('#setImpinjFastTidOff').addEventListener('click', async function (e) {
-        try {
-          const data = await SunmiUHF.setImpinjFastTid({enable: false});
-          printToOutput('setImpinjFastTid(false)', data);
-        } catch (error) {
-          printToOutput('setImpinjFastTid(false) - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
-      self.shadowRoot.querySelector('#getImpinjFastTid').addEventListener('click', async function (e) {
-        try {
-          const data = await SunmiUHF.getImpinjFastTid();
-          printToOutput('getImpinjFastTid()', data);
-        } catch (error) {
-          printToOutput('getImpinjFastTid() - ERROR', { code: error.code, message: error.message });
-        }
-      });
+      for (const [key, value] of Object.entries(handlers)) {
+        self.shadowRoot.querySelector('#' + key).addEventListener('click', async function (e) {
+          try {
+            const data = await value.handler();
+            printToOutput(value.tag, data);
+          } catch (error) {
+            printToOutput(value.tag + ' - ERROR', { code: error.code, message: error.message });
+          }
+        });
+      }
 
       window.addEventListener('sunmi_uhf_debug', (e) => {
         printToOutput('sunmi_uhf_debug', e);
@@ -403,6 +378,28 @@ window.customElements.define(
       };
 
       SunmiKeyboardHandler.setKeyHandler({ key: HandleableKey.RFID }, handler);
+
+      SunmiUHF.addListener("onReaderDisconnected", () => printToOutput('onReaderDisconnected', {}));
+      SunmiUHF.addListener("onReaderLostConnection", () => printToOutput('onReaderLostConnection', {}));
+      SunmiUHF.addListener("onReaderDisconnectedOrLostConnection", () => printToOutput('onReaderDisconnectedOrLostConnection', {}));
+
+      SunmiUHF.addListener("onReaderConnected", () => printToOutput('onReaderConnected', {}));
+      SunmiUHF.addListener("onReaderBoot", () => printToOutput('onReaderBoot', {}));
+      SunmiUHF.addListener("onReaderBootOrConnected", () => printToOutput('onReaderBootOrConnected', {}));
+
+      SunmiUHF.addListener("onBatteryRemainingPercent", (e) => printToOutput('onBatteryRemainingPercent', e));
+      SunmiUHF.addListener("onBatteryLowElectricity", (e) => printToOutput('onBatteryLowElectricity', e));
+      SunmiUHF.addListener("onBatteryRemainingPercentOrLowElectricity", (e) => printToOutput('onBatteryRemainingPercentOrLowElectricity', e));
+
+      SunmiUHF.addListener("onBatteryChargeState", (e) => printToOutput('onBatteryChargeState', e));
+
+      SunmiUHF.addListener("onBatteryChargeNumTimes", (e) => printToOutput('onBatteryChargeNumTimes', e));
+
+      SunmiUHF.addListener("onBatteryVoltage", (e) => printToOutput('onBatteryVoltage', e));
+
+      SunmiUHF.addListener("onFirmwareVersion", (e) => printToOutput('onFirmwareVersion', e));
+
+      SunmiUHF.addListener("onReaderSN", (e) => printToOutput('onReaderSN', e));
     }
   }
 );

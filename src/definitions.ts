@@ -1,17 +1,19 @@
 export type CallbackID = string;
 
+import type { PluginListenerHandle } from '@capacitor/core';
+
 export interface SunmiUHFPlugin {
   /**
    * Get RFID type
    *
    * **Returns:**
    *
-   * - `model` - RFID type: `UHF_R2000` - UHF R2000, `INNER` - Inner RFID, `NONE` - No RFID module, `UNKNOWN` - Unknown RFID module.
+   * - `model` - RFID type: `UHF_S7100` - UHF S7100, `UHF_R2000` - UHF R2000, `INNER` - Inner RFID, `NONE` - No RFID module, `UNKNOWN` - Unknown RFID module.
    * - `available` - Whether the RFID module is available.
    *
    * @see 2.4.1.1. in docs
    */
-  getScanModel(): Promise<{ model: "UHF_R2000"|"INNER"|"NONE"|"UNKNOWN", available: boolean }>;
+  getScanModel(): Promise<{ model: "UHF_S7100"|"UHF_R2000"|"INNER"|"NONE"|"UNKNOWN", available: boolean }>;
 
   /**
    * Starts scanning inventory operation
@@ -164,4 +166,163 @@ export interface SunmiUHFPlugin {
    * @see 2.4.3.9. in docs
    */
   getImpinjFastTid(): Promise<{ status: number, details: { start_time: number, end_time: number } }>;
+
+  /**
+   * Refreshes the battery charging state. The resulting battery state will be returned in `onBatteryChargeState` events.
+   *
+   * @throws {Error} If the device does not support this feature.
+   */
+  getBatteryChargeState(): Promise<void>;
+
+  /**
+   * Refreshes the battery remaining percent. The resulting battery remaining percent will be returned in `onBatteryRemainingPercent` events.
+   *
+   * @throws {Error} If the device does not support this feature.
+   */
+  getBatteryRemainingPercent(): Promise<void>;
+
+  /**
+   * Refreshes the battery cycles. The resulting battery cycles will be returned in `onBatteryChargeNumTimes` events.
+   *
+   * @throws {Error} If the device does not support this feature.
+   */
+  getBatteryChargeNumTimes(): Promise<void>;
+
+  /**
+   * Refreshes the battery voltage. The resulting battery voltage will be returned in `onBatteryVoltage` events.
+   *
+   * @throws {Error} If the device does not support this feature.
+   */
+  getBatteryVoltage(): Promise<void>;
+
+  /**
+   * Refreshes the UHF firmware version. The resulting UHF firmware version will be returned in `onFirmwareVersion` events.
+   *
+   * @throws {Error} If the device does not support this feature.
+   */
+  getFirmwareVersion(): Promise<void>;
+
+  /**
+   * Refreshes the reader serial number version. The resulting reader serial number version will be returned in `onReaderSN` events.
+   *
+   * @throws {Error} If the device does not support this feature.
+   */
+  getReaderSN(): Promise<void>;
+
+  /**
+   * Listens for reader connected events.
+   */
+  addListener(
+      eventName: 'onReaderConnected',
+      listenerFunc: () => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for reader booted events.
+   */
+  addListener(
+      eventName: 'onReaderBoot',
+      listenerFunc: () => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for reader connected or booted events.
+   */
+  addListener(
+      eventName: 'onReaderBootOrConnected',
+      listenerFunc: () => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for reader disconnected  events.
+   */
+  addListener(
+      eventName: 'onReaderDisconnected',
+      listenerFunc: () => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for reader lost connection events.
+   */
+  addListener(
+      eventName: 'onReaderLostConnection',
+      listenerFunc: () => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for reader disconnected or lost connection events.
+   */
+  addListener(
+      eventName: 'onReaderDisconnectedOrLostConnection',
+      listenerFunc: () => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   *  Listens for battery remaining percent events.
+   */
+  addListener(
+      eventName: 'onBatteryRemainingPercent',
+      listenerFunc: (event: { charge_level: number }) => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for battery low electricity events.
+   */
+  addListener(
+      eventName: 'onBatteryLowElectricity',
+      listenerFunc: (event: { charge_level: number }) => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for battery remaining percent or low electricity events.
+   */
+  addListener(
+      eventName: 'onBatteryRemainingPercentOrLowElectricity',
+      listenerFunc: (event: { charge_level: number }) => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for battery charge state events.
+   */
+  addListener(
+      eventName: 'onBatteryChargeState',
+      listenerFunc: (event: { state: "Unknown"|"NotCharging"|"PreCharging"|"QuickCharging"|"Charged" }) => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for battery charge num times events.
+   */
+  addListener(
+      eventName: 'onBatteryChargeNumTimes',
+      listenerFunc: (event: { battery_cycles: number  }) => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for battery voltage events.
+   */
+  addListener(
+      eventName: 'onBatteryVoltage',
+      listenerFunc: (event: { voltage: number  }) => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for UHF firmware version events.
+   */
+  addListener(
+      eventName: 'onFirmwareVersion',
+      listenerFunc: (event: { version: string, major: number, minor: number  }) => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for reader serial number events.
+   */
+  addListener(
+      eventName: 'onReaderSN',
+      listenerFunc: (event: { sn: string, region: string, band_low: number, band_high: number  }) => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Removes all listeners
+   */
+  removeAllListeners(): Promise<void>;
 }
