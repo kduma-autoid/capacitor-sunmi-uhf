@@ -6,12 +6,12 @@ export interface SunmiUHFPlugin {
    *
    * **Returns:**
    *
-   * - `model` - RFID type: `UHF_R2000` - UHF R2000, `INNER` - Inner RFID, `NONE` - No RFID module, `UNKNOWN` - Unknown RFID module.
+   * - `model` - RFID type: `UHF_S7100` - UHF S7100, `UHF_R2000` - UHF R2000, `INNER` - Inner RFID, `NONE` - No RFID module, `UNKNOWN` - Unknown RFID module.
    * - `available` - Whether the RFID module is available.
    *
    * @see 2.4.1.1. in docs
    */
-  getScanModel(): Promise<{ model: "UHF_R2000"|"INNER"|"NONE"|"UNKNOWN", available: boolean }>;
+  getScanModel(): Promise<{ model: "UHF_S7100"|"UHF_R2000"|"INNER"|"NONE"|"UNKNOWN", available: boolean }>;
 
   /**
    * Starts scanning inventory operation

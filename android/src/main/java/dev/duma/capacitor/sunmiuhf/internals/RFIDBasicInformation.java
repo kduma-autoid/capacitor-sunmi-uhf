@@ -17,26 +17,27 @@ public class RFIDBasicInformation {
         int scanModel = helper.getScanModel();
         JSObject ret = new JSObject();
 
-        switch(scanModel) {
-            case RFIDManager.UHF_R2000:
+        switch (scanModel) {
+            case RFIDManager.UHF_S7100 -> {
+                ret.put("model", "UHF_S7100");
+                ret.put("available", true);
+            }
+            case RFIDManager.UHF_R2000 -> {
                 ret.put("model", "UHF_R2000");
                 ret.put("available", true);
-                break;
-
-            case RFIDManager.INNER:
+            }
+            case RFIDManager.INNER -> {
                 ret.put("model", "INNER");
                 ret.put("available", true);
-                break;
-
-            case RFIDManager.NONE:
+            }
+            case RFIDManager.NONE -> {
                 ret.put("model", "NONE");
                 ret.put("available", false);
-                break;
-
-            default:
+            }
+            default -> {
                 ret.put("model", "UNKNOWN");
                 ret.put("available", false);
-                break;
+            }
         }
 
         call.resolve(ret);
