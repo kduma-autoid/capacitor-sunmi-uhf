@@ -14,13 +14,14 @@ import dev.duma.capacitor.sunmiuhf.internals.models.BatteryChargingStateEnum;
 
 public class SunmiUHFBroadcastReceiver {
     public interface ScanCallback {
+        void onReaderBoot();
         void onReaderConnected();
         void onReaderDisconnected();
-        void onBatteryState(int charge_level);
-
-        void onBatteryCharging(BatteryChargingStateEnum state);
-
-        void onBatteryChargingNumTimes(int battery_cycles);
+        void onReaderLostConnection();
+        void onBatteryRemainingPercent(int charge_level);
+        void onBatteryLowElectricity(int charge_level);
+        void onBatteryChargeState(BatteryChargingStateEnum state);
+        void onBatteryChargeNumTimes(int battery_cycles);
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -30,33 +31,35 @@ public class SunmiUHFBroadcastReceiver {
                 return;
 
             switch (Objects.requireNonNull(intent.getAction())) {
-                case ParamCts.BROADCAST_ON_LOST_CONNECT, ParamCts.BROADCAST_ON_DISCONNECT -> callback.onReaderDisconnected();
+                case ParamCts.BROADCAST_ON_LOST_CONNECT -> callback.onReaderLostConnection();
 
-                case ParamCts.BROADCAST_READER_BOOT, ParamCts.BROADCAST_ON_CONNECT -> callback.onReaderConnected();
+                case ParamCts.BROADCAST_ON_DISCONNECT -> callback.onReaderDisconnected();
 
-                case ParamCts.BROADCAST_BATTER_LOW_ELEC, ParamCts.BROADCAST_BATTERY_REMAINING_PERCENTAGE -> {
-                    callback.onBatteryState(
-                            intent.getIntExtra(ParamCts.BATTERY_REMAINING_PERCENT, 100)
-                    );
-                }
+                case ParamCts.BROADCAST_ON_CONNECT -> callback.onReaderConnected();
 
-                case ParamCts.BROADCAST_BATTER_CHARGING -> {
-                    callback.onBatteryCharging(
-                            switch (intent.getByteExtra(ParamCts.BATTERY_CHARGING, (byte) 0)) {
-                                case (byte) 0x00 -> BatteryChargingStateEnum.NotCharging;
-                                case (byte) 0x01 -> BatteryChargingStateEnum.PreCharging;
-                                case (byte) 0x02 -> BatteryChargingStateEnum.QuickCharging;
-                                case (byte) 0x03 -> BatteryChargingStateEnum.Charged;
-                                default -> BatteryChargingStateEnum.Unknown;
-                            }
-                    );
-                }
+                case ParamCts.BROADCAST_READER_BOOT -> callback.onReaderBoot();
 
-                case ParamCts.BROADCAST_BATTER_CHARGING_NUM_TIMES -> {
-                    callback.onBatteryChargingNumTimes(
-                            intent.getIntExtra(ParamCts.BATTERY_CHARGING_NUM_TIMES, 0)
-                    );
-                }
+                case ParamCts.BROADCAST_BATTER_LOW_ELEC -> callback.onBatteryLowElectricity(
+                        intent.getIntExtra(ParamCts.BATTERY_REMAINING_PERCENT, 100)
+                );
+
+                case ParamCts.BROADCAST_BATTERY_REMAINING_PERCENTAGE -> callback.onBatteryRemainingPercent(
+                        intent.getIntExtra(ParamCts.BATTERY_REMAINING_PERCENT, 100)
+                );
+
+                case ParamCts.BROADCAST_BATTER_CHARGING -> callback.onBatteryChargeState(
+                        switch (intent.getByteExtra(ParamCts.BATTERY_CHARGING, (byte) 0)) {
+                            case (byte) 0x00 -> BatteryChargingStateEnum.NotCharging;
+                            case (byte) 0x01 -> BatteryChargingStateEnum.PreCharging;
+                            case (byte) 0x02 -> BatteryChargingStateEnum.QuickCharging;
+                            case (byte) 0x03 -> BatteryChargingStateEnum.Charged;
+                            default -> BatteryChargingStateEnum.Unknown;
+                        }
+                );
+
+                case ParamCts.BROADCAST_BATTER_CHARGING_NUM_TIMES -> callback.onBatteryChargeNumTimes(
+                        intent.getIntExtra(ParamCts.BATTERY_CHARGING_NUM_TIMES, 0)
+                );
             }
         }
     };

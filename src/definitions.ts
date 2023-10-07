@@ -16,11 +16,6 @@ export interface SunmiUHFPlugin {
   getScanModel(): Promise<{ model: "UHF_S7100"|"UHF_R2000"|"INNER"|"NONE"|"UNKNOWN", available: boolean }>;
 
   /**
-   * Refreshes the battery state. The resulting battery state will be returned in `onBatteryState` and `onBatteryCharging` events.
-   */
-  refreshBatteryState(): Promise<void>|void;
-
-  /**
    * Starts scanning inventory operation
    *
    * **Parameters:**
@@ -173,7 +168,29 @@ export interface SunmiUHFPlugin {
   getImpinjFastTid(): Promise<{ status: number, details: { start_time: number, end_time: number } }>;
 
   /**
-   * Listens for reader connected or booted events.
+   * Refreshes the battery charging state. The resulting battery state will be returned in `onBatteryChargeState` events.
+   *
+   * @throws {Error} If the device does not support this feature.
+   */
+  getBatteryChargeState(): Promise<void>;
+
+  /**
+   * Refreshes the battery remaining percent. The resulting battery remaining percent will be returned in `onBatteryRemainingPercent` events.
+   *
+   * @throws {Error} If the device does not support this feature.
+   */
+  getBatteryRemainingPercent(): Promise<void>;
+
+
+  /**
+   * Refreshes the battery cycles. The resulting battery cycles will be returned in `onBatteryChargeNumTimes` events.
+   *
+   * @throws {Error} If the device does not support this feature.
+   */
+  getBatteryChargeNumTimes(): Promise<void>;
+
+  /**
+   * Listens for reader connected events.
    */
   addListener(
       eventName: 'onReaderConnected',
@@ -181,7 +198,23 @@ export interface SunmiUHFPlugin {
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   /**
-   * Listens for reader disconnected or lost connection events.
+   * Listens for reader booted events.
+   */
+  addListener(
+      eventName: 'onReaderBoot',
+      listenerFunc: () => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for reader connected or booted events.
+   */
+  addListener(
+      eventName: 'onReaderBootOrConnected',
+      listenerFunc: () => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for reader disconnected  events.
    */
   addListener(
       eventName: 'onReaderDisconnected',
@@ -189,26 +222,58 @@ export interface SunmiUHFPlugin {
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   /**
-   *
+   * Listens for reader lost connection events.
    */
   addListener(
-      eventName: 'onBatteryState',
+      eventName: 'onReaderLostConnection',
+      listenerFunc: () => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for reader disconnected or lost connection events.
+   */
+  addListener(
+      eventName: 'onReaderDisconnectedOrLostConnection',
+      listenerFunc: () => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   *  Listens for battery remaining percent events.
+   */
+  addListener(
+      eventName: 'onBatteryRemainingPercent',
       listenerFunc: (event: { charge_level: number }) => void,
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   /**
-   *
+   * Listens for battery low electricity events.
    */
   addListener(
-      eventName: 'onBatteryCharging',
+      eventName: 'onBatteryLowElectricity',
+      listenerFunc: (event: { charge_level: number }) => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for battery remaining percent or low electricity events.
+   */
+  addListener(
+      eventName: 'onBatteryRemainingPercentOrLowElectricity',
+      listenerFunc: (event: { charge_level: number }) => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for battery charge state events.
+   */
+  addListener(
+      eventName: 'onBatteryChargeState',
       listenerFunc: (event: { state: "Unknown"|"NotCharging"|"PreCharging"|"QuickCharging"|"Charged" }) => void,
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   /**
-   *
+   * Listens for battery charge num times events.
    */
   addListener(
-      eventName: 'onBatteryChargingNumTimes',
+      eventName: 'onBatteryChargeNumTimes',
       listenerFunc: (event: { battery_cycles: number  }) => void,
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 

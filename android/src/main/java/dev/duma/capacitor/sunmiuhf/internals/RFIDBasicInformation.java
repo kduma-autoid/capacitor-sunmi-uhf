@@ -28,14 +28,43 @@ public class RFIDBasicInformation {
         }
     }
 
-    public void refreshBatteryState() throws RemoteException {
+    private String getScanModelName() throws RemoteException {
+        return switch (uhf.RfidHelper().getScanModel()) {
+            case RFIDManager.UHF_S7100 -> "UHF_S7100";
+            case RFIDManager.UHF_R2000 -> "UHF_R2000";
+            case RFIDManager.INNER -> "INNER";
+            case RFIDManager.NONE -> "NONE";
+            default -> "UNKNOWN";
+        };
+    }
+
+    public void getBatteryChargeState() throws RemoteException {
         RFIDHelper helper = uhf.RfidHelper();
         switch (helper.getScanModel()) {
             case RFIDManager.UHF_S7100, RFIDManager.UHF_R2000 -> {
                 helper.getBatteryChargeState();
+            }
+            default -> throw new RuntimeException("Scanner model not supported: " + getScanModelName());
+        }
+    }
+
+    public void getBatteryRemainingPercent() throws RemoteException {
+        RFIDHelper helper = uhf.RfidHelper();
+        switch (helper.getScanModel()) {
+            case RFIDManager.UHF_S7100, RFIDManager.UHF_R2000 -> {
                 helper.getBatteryRemainingPercent();
+            }
+            default -> throw new RuntimeException("Scanner model not supported: " + getScanModelName());
+        }
+    }
+
+    public void getBatteryChargeNumTimes() throws RemoteException {
+        RFIDHelper helper = uhf.RfidHelper();
+        switch (helper.getScanModel()) {
+            case RFIDManager.UHF_S7100, RFIDManager.UHF_R2000 -> {
                 helper.getBatteryChargeNumTimes();
             }
+            default -> throw new RuntimeException("Scanner model not supported: " + getScanModelName());
         }
     }
 }

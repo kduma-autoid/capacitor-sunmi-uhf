@@ -20,31 +20,54 @@ public class SunmiUHFPlugin extends Plugin {
 
         implementation.getBroadcastReceiver().setCallback(new SunmiUHFBroadcastReceiver.ScanCallback() {
             @Override
+            public void onReaderBoot() {
+                notifyListeners("onReaderBoot", new JSObject());
+                notifyListeners("onReaderBootOrConnected", new JSObject());
+            }
+
+            @Override
             public void onReaderConnected() {
                 notifyListeners("onReaderConnected", new JSObject());
+                notifyListeners("onReaderBootOrConnected", new JSObject());
             }
 
             @Override
             public void onReaderDisconnected() {
                 notifyListeners("onReaderDisconnected", new JSObject());
+                notifyListeners("onReaderDisconnectedOrLostConnection", new JSObject());
             }
 
             @Override
-            public void onBatteryState(int charge_level) {
+            public void onReaderLostConnection() {
+                notifyListeners("onReaderLostConnection", new JSObject());
+                notifyListeners("onReaderDisconnectedOrLostConnection", new JSObject());
+            }
+
+            @Override
+            public void onBatteryRemainingPercent(int charge_level) {
                 JSObject ret = new JSObject();
                 ret.put("charge_level", charge_level);
-                notifyListeners("onBatteryState", ret);
+                notifyListeners("onBatteryRemainingPercent", ret);
+                notifyListeners("onBatteryRemainingPercentOrLowElectricity", ret);
             }
 
             @Override
-            public void onBatteryChargingNumTimes(int battery_cycles) {
+            public void onBatteryLowElectricity(int charge_level) {
+                JSObject ret = new JSObject();
+                ret.put("charge_level", charge_level);
+                notifyListeners("onBatteryLowElectricity", ret);
+                notifyListeners("onBatteryRemainingPercentOrLowElectricity", ret);
+            }
+
+            @Override
+            public void onBatteryChargeNumTimes(int battery_cycles) {
                 JSObject ret = new JSObject();
                 ret.put("battery_cycles", battery_cycles);
-                notifyListeners("onBatteryChargingNumTimes", ret);
+                notifyListeners("onBatteryChargeNumTimes", ret);
             }
 
             @Override
-            public void onBatteryCharging(BatteryChargingStateEnum state) {
+            public void onBatteryChargeState(BatteryChargingStateEnum state) {
                 JSObject ret = new JSObject();
                 ret.put("state", switch (state) {
                     case Unknown -> "Unknown";
@@ -53,7 +76,7 @@ public class SunmiUHFPlugin extends Plugin {
                     case QuickCharging -> "QuickCharging";
                     case Charged -> "Charged";
                 });
-                notifyListeners("onBatteryCharging", ret);
+                notifyListeners("onBatteryChargeState", ret);
             }
         });
 
@@ -77,9 +100,29 @@ public class SunmiUHFPlugin extends Plugin {
     }
 
     @PluginMethod
-    public void refreshBatteryState(PluginCall call) throws RemoteException {
+    public void getBatteryChargeState(PluginCall call) throws RemoteException {
         try {
-            implementation.basicInformation().refreshBatteryState();
+            implementation.basicInformation().getBatteryChargeState();
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void getBatteryRemainingPercent(PluginCall call) throws RemoteException {
+        try {
+            implementation.basicInformation().getBatteryRemainingPercent();
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void getBatteryChargeNumTimes(PluginCall call) throws RemoteException {
+        try {
+            implementation.basicInformation().getBatteryChargeNumTimes();
             call.resolve();
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
