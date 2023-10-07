@@ -177,14 +177,6 @@ window.customElements.define(
         }
       });
 
-      self.shadowRoot.querySelector('#stop_scan').addEventListener('click', async function (e) {
-        try {
-          await SunmiUHF.stopScanning();
-        } catch (error) {
-          printToOutput('stopScanning() - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
       self.shadowRoot.querySelector('#setAccessEpcMatch').addEventListener('click', async function (e) {
         const first_epc = self.shadowRoot.querySelector('#first_epc');
 
@@ -197,24 +189,6 @@ window.customElements.define(
           printToOutput('setAccessEpcMatch('+first_epc.innerHTML+')', data);
         } catch (error) {
           printToOutput('setAccessEpcMatch('+first_epc.innerHTML+') - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
-      self.shadowRoot.querySelector('#cancelAccessEpcMatch').addEventListener('click', async function (e) {
-        try {
-          const data = await SunmiUHF.cancelAccessEpcMatch();
-          printToOutput('cancelAccessEpcMatch()', data);
-        } catch (error) {
-          printToOutput('cancelAccessEpcMatch() - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
-      self.shadowRoot.querySelector('#getAccessEpcMatch').addEventListener('click', async function (e) {
-        try {
-          const data = await SunmiUHF.getAccessEpcMatch();
-          printToOutput('getAccessEpcMatch()', data);
-        } catch (error) {
-          printToOutput('getAccessEpcMatch() - ERROR', { code: error.code, message: error.message });
         }
       });
 
@@ -250,70 +224,47 @@ window.customElements.define(
         }
       });
 
-      self.shadowRoot.querySelector('#writeTag00').addEventListener('click', async function (e) {
-        try {
-          let data = await SunmiUHF.writeTag({bank: 'USER', address: 0, data: '00 00'});
-          printToOutput('writeTag(00 00)', data);
-        } catch (error) {
-          printToOutput('writeTag(00 00) - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
-      self.shadowRoot.querySelector('#writeTagFF').addEventListener('click', async function (e) {
-        try {
-          let data = await SunmiUHF.writeTag({bank: 'USER', address: 0, data: 'FF FF'});
-          printToOutput('writeTag(FF FF)', data);
-        } catch (error) {
-          printToOutput('writeTag(FF FF) - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
-      self.shadowRoot.querySelector('#writeTagPsw').addEventListener('click', async function (e) {
-        try {
-          let data = await SunmiUHF.writeTag({bank: 'RESERVED', address: 0, data: '1234567812345678'});
-          printToOutput('writeTag(Psw)', data);
-        } catch (error) {
-          printToOutput('writeTag(Psw) - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
-      self.shadowRoot.querySelector('#writeTagCls').addEventListener('click', async function (e) {
-        try {
-          let data = await SunmiUHF.writeTag({bank: 'RESERVED', address: 0, data: '0000000000000000', password: '12345678'});
-          printToOutput('writeTag(Cls)', data);
-        } catch (error) {
-          printToOutput('writeTag(Cls) - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
-      self.shadowRoot.querySelector('#lockTag').addEventListener('click', async function (e) {
-        try {
-          let data = await SunmiUHF.lockTag({bank: 'USER', type: 'LOCK', password: '12345678'});
-          printToOutput('lockTag()', data);
-        } catch (error) {
-          printToOutput('lockTag() - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
-      self.shadowRoot.querySelector('#unlockTag').addEventListener('click', async function (e) {
-        try {
-          let data = await SunmiUHF.lockTag({bank: 'USER', type: 'OPEN', password: '12345678'});
-          printToOutput('(un)lockTag()', data);
-        } catch (error) {
-          printToOutput('(un)lockTag() - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
-      self.shadowRoot.querySelector('#killTag').addEventListener('click', async function (e) {
-        try {
-          let data = await SunmiUHF.killTag({password: '12345678'});
-          printToOutput('killTag()', data);
-        } catch (error) {
-          printToOutput('killTag() - ERROR', { code: error.code, message: error.message });
-        }
-      });
-
       const handlers = {
+        'stop_scan': {
+          'tag': 'stopScanning()',
+          'handler': async () => await SunmiUHF.stopScanning()
+        },
+        'cancelAccessEpcMatch': {
+          'tag': 'cancelAccessEpcMatch()',
+          'handler': async () => await SunmiUHF.cancelAccessEpcMatch()
+        },
+        'getAccessEpcMatch': {
+          'tag': 'getAccessEpcMatch()',
+          'handler': async () => await SunmiUHF.getAccessEpcMatch()
+        },
+        'writeTag00': {
+          'tag': 'writeTag(00 00)',
+          'handler': async () => await SunmiUHF.writeTag({bank: 'USER', address: 0, data: '00 00'})
+        },
+        'writeTagFF': {
+          'tag': 'writeTag(FF FF)',
+          'handler': async () => await SunmiUHF.writeTag({bank: 'USER', address: 0, data: 'FF FF'})
+        },
+        'writeTagPsw': {
+          'tag': 'writeTag(Psw)',
+          'handler': async () => await SunmiUHF.writeTag({bank: 'RESERVED', address: 0, data: '1234567812345678'})
+        },
+        'writeTagCls': {
+          'tag': 'writeTag(Cls)',
+          'handler': async () => await SunmiUHF.writeTag({bank: 'RESERVED', address: 0, data: '0000000000000000', password: '12345678'})
+        },
+        'lockTag': {
+          'tag': 'lockTag()',
+          'handler': async () => await SunmiUHF.lockTag({bank: 'USER', type: 'LOCK', password: '12345678'})
+        },
+        'unlockTag': {
+          'tag': '(un)lockTag()',
+          'handler': async () => await SunmiUHF.lockTag({bank: 'USER', type: 'OPEN', password: '12345678'})
+        },
+        'killTag': {
+          'tag': 'killTag()',
+          'handler': async () => await SunmiUHF.killTag({password: '12345678'})
+        },
         'getScanModel': {
           'tag': 'getScanModel()',
           'handler': async () => await SunmiUHF.getScanModel()
