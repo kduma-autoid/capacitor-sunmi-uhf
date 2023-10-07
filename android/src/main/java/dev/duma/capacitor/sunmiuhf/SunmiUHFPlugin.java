@@ -2,10 +2,13 @@ package dev.duma.capacitor.sunmiuhf;
 
 import android.os.RemoteException;
 
+import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
+
+import dev.duma.capacitor.sunmiuhf.internals.RFIDBasicInformation;
 
 @CapacitorPlugin(name = "SunmiUHF")
 public class SunmiUHFPlugin extends Plugin {
@@ -21,7 +24,12 @@ public class SunmiUHFPlugin extends Plugin {
     @PluginMethod
     public void getScanModel(PluginCall call) throws RemoteException {
         try {
-            implementation.basicInformation().getScanModel(call, bridge);
+            implementation.basicInformation().getScanModel((model, available) -> {
+                JSObject ret = new JSObject();
+                ret.put("model", model);
+                ret.put("available", available);
+                call.resolve(ret);
+            });
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }

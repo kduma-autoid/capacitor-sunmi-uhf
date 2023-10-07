@@ -2,10 +2,6 @@ package dev.duma.capacitor.sunmiuhf.internals;
 
 import android.os.RemoteException;
 
-import com.getcapacitor.Bridge;
-import com.getcapacitor.JSObject;
-import com.getcapacitor.PluginCall;
-import com.sunmi.rfid.RFIDHelper;
 import com.sunmi.rfid.RFIDManager;
 
 import dev.duma.capacitor.sunmiuhf.SunmiUHF;
@@ -17,35 +13,17 @@ public class RFIDBasicInformation {
         this.uhf = uhf;
     }
 
-    public void getScanModel(PluginCall call, Bridge bridge) throws RemoteException {
-        RFIDHelper helper = SunmiUHF.getRfidHelper();
+    public interface ScanModelCallback {
+        void response(String model, boolean available);
+    }
 
-        int scanModel = helper.getScanModel();
-        JSObject ret = new JSObject();
-
-        switch (scanModel) {
-            case RFIDManager.UHF_S7100 -> {
-                ret.put("model", "UHF_S7100");
-                ret.put("available", true);
-            }
-            case RFIDManager.UHF_R2000 -> {
-                ret.put("model", "UHF_R2000");
-                ret.put("available", true);
-            }
-            case RFIDManager.INNER -> {
-                ret.put("model", "INNER");
-                ret.put("available", true);
-            }
-            case RFIDManager.NONE -> {
-                ret.put("model", "NONE");
-                ret.put("available", false);
-            }
-            default -> {
-                ret.put("model", "UNKNOWN");
-                ret.put("available", false);
-            }
+    public void getScanModel(ScanModelCallback callback) throws RemoteException {
+        switch (uhf.RfidHelper().getScanModel()) {
+            case RFIDManager.UHF_S7100 -> callback.response("UHF_S7100", true);
+            case RFIDManager.UHF_R2000 -> callback.response("UHF_R2000", true);
+            case RFIDManager.INNER -> callback.response("INNER", true);
+            case RFIDManager.NONE -> callback.response("NONE", false);
+            default -> callback.response("UNKNOWN", false);
         }
-
-        call.resolve(ret);
     }
 }

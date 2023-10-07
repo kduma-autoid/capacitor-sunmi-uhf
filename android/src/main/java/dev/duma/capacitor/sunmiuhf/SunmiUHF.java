@@ -41,6 +41,10 @@ public class SunmiUHF {
         return basicInformation;
     }
 
+    public RFIDHelper RfidHelper() {
+        return SunmiUHF.getRfidHelper();
+    }
+
     public static RFIDHelper getRfidHelper() {
         RFIDManager rfidManager = RFIDManager.getInstance();
         if(!rfidManager.isConnect()) {
