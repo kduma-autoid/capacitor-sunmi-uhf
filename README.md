@@ -40,6 +40,7 @@ project(':sunmi-scanner-sdk').projectDir = new File('../node_modules/@kduma-auto
 * [`getBatteryChargeNumTimes()`](#getbatterychargenumtimes)
 * [`getBatteryVoltage()`](#getbatteryvoltage)
 * [`getFirmwareVersion()`](#getfirmwareversion)
+* [`getReaderSN()`](#getreadersn)
 * [`addListener('onReaderConnected', ...)`](#addlisteneronreaderconnected)
 * [`addListener('onReaderBoot', ...)`](#addlisteneronreaderboot)
 * [`addListener('onReaderBootOrConnected', ...)`](#addlisteneronreaderbootorconnected)
@@ -53,6 +54,7 @@ project(':sunmi-scanner-sdk').projectDir = new File('../node_modules/@kduma-auto
 * [`addListener('onBatteryChargeNumTimes', ...)`](#addlisteneronbatterychargenumtimes)
 * [`addListener('onBatteryVoltage', ...)`](#addlisteneronbatteryvoltage)
 * [`addListener('onFirmwareVersion', ...)`](#addlisteneronfirmwareversion)
+* [`addListener('onReaderSN', ...)`](#addlisteneronreadersn)
 * [`removeAllListeners()`](#removealllisteners)
 * [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
@@ -415,6 +417,17 @@ Refreshes the UHF firmware version. The resulting UHF firmware version will be r
 --------------------
 
 
+### getReaderSN()
+
+```typescript
+getReaderSN() => Promise<void>
+```
+
+Refreshes the reader serial number version. The resulting reader serial number version will be returned in `onReaderSN` events.
+
+--------------------
+
+
 ### addListener('onReaderConnected', ...)
 
 ```typescript
@@ -643,6 +656,24 @@ Listens for UHF firmware version events.
 | ------------------ | ----------------------------------------------------------------------------------- |
 | **`eventName`**    | <code>'onFirmwareVersion'</code>                                                    |
 | **`listenerFunc`** | <code>(event: { version: string; major: number; minor: number; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### addListener('onReaderSN', ...)
+
+```typescript
+addListener(eventName: 'onReaderSN', listenerFunc: (event: { sn: string; region: string; band_low: number; band_high: number; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+Listens for reader serial number events.
+
+| Param              | Type                                                                                                  |
+| ------------------ | ----------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'onReaderSN'</code>                                                                             |
+| **`listenerFunc`** | <code>(event: { sn: string; region: string; band_low: number; band_high: number; }) =&gt; void</code> |
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 

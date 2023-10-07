@@ -85,6 +85,16 @@ public class SunmiUHFPlugin extends Plugin {
             }
 
             @Override
+            public void onReaderSN(String sn, String region, int band_low, int band_high) {
+                JSObject ret = new JSObject();
+                ret.put("sn", sn);
+                ret.put("region", region);
+                ret.put("band_low", band_low);
+                ret.put("band_high", band_high);
+                notifyListeners("onFirmwareVersion", ret);
+            }
+
+            @Override
             public void onBatteryChargeState(BatteryChargingStateEnum state) {
                 JSObject ret = new JSObject();
                 ret.put("state", switch (state) {
@@ -161,6 +171,16 @@ public class SunmiUHFPlugin extends Plugin {
     public void getFirmwareVersion(PluginCall call) throws RemoteException {
         try {
             implementation.basicInformation().getFirmwareVersion();
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void getReaderSN(PluginCall call) throws RemoteException {
+        try {
+            implementation.basicInformation().getReaderSN();
             call.resolve();
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);

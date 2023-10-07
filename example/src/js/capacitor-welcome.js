@@ -88,6 +88,7 @@ window.customElements.define(
         <button id='getBatteryChargeNumTimes'>getBatteryChargeNumTimes()</button>
         <button id='getBatteryVoltage'>getBatteryVoltage()</button>
         <button id='getFirmwareVersion'>getFirmwareVersion()</button>
+        <button id='getReaderSN'>getReaderSN()</button>
         <hr>
         <button id='setAccessEpcMatch'>setAccessEpcMatch(<span id='first_epc'>first</span>')</button>
         <button id='cancelAccessEpcMatch'>cancelAccessEpcMatch()</button>
@@ -291,6 +292,10 @@ window.customElements.define(
           'tag': 'getFirmwareVersion()',
           'handler': async () => await SunmiUHF.getFirmwareVersion()
         },
+        'getReaderSN': {
+          'tag': 'getReaderSN()',
+          'handler': async () => await SunmiUHF.getReaderSN()
+        },
         'setImpinjFastTid': {
           'tag': 'setImpinjFastTid(true)',
           'handler': async () => await SunmiUHF.setImpinjFastTid({enable: true})
@@ -393,6 +398,8 @@ window.customElements.define(
       SunmiUHF.addListener("onBatteryVoltage", (e) => printToOutput('onBatteryVoltage', e));
 
       SunmiUHF.addListener("onFirmwareVersion", (e) => printToOutput('onFirmwareVersion', e));
+
+      SunmiUHF.addListener("onReaderSN", (e) => printToOutput('onReaderSN', e));
     }
   }
 );

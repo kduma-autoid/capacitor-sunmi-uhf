@@ -203,6 +203,13 @@ export interface SunmiUHFPlugin {
   getFirmwareVersion(): Promise<void>;
 
   /**
+   * Refreshes the reader serial number version. The resulting reader serial number version will be returned in `onReaderSN` events.
+   *
+   * @throws {Error} If the device does not support this feature.
+   */
+  getReaderSN(): Promise<void>;
+
+  /**
    * Listens for reader connected events.
    */
   addListener(
@@ -304,6 +311,14 @@ export interface SunmiUHFPlugin {
   addListener(
       eventName: 'onFirmwareVersion',
       listenerFunc: (event: { version: string, major: number, minor: number  }) => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for reader serial number events.
+   */
+  addListener(
+      eventName: 'onReaderSN',
+      listenerFunc: (event: { sn: string, region: string, band_low: number, band_high: number  }) => void,
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   /**

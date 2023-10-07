@@ -24,6 +24,7 @@ public class SunmiUHFBroadcastReceiver {
         void onBatteryChargeNumTimes(int battery_cycles);
         void onBatteryVoltage(int voltage);
         void onFirmwareVersion(int major, int minor);
+        void onReaderSN(String sn, String region, int band_low, int band_high);
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -67,6 +68,32 @@ public class SunmiUHFBroadcastReceiver {
                         intent.getIntExtra(ParamCts.FIRMWARE_MAIN_VERSION, 0),
                         intent.getIntExtra(ParamCts.FIRMWARE_MIN_VERSION, 0)
                 );
+
+                case ParamCts.BROADCAST_SN -> {
+                    String sn = intent.getStringExtra(ParamCts.SN);
+                    if(sn == null) {
+                        return;
+                    }
+
+                    int[] rfBand = ParamCts.INSTANCE.getRFFrequencyBand(sn);
+
+                    String region;
+
+                    if (rfBand[0] == 1) {
+                        region = switch(rfBand[3]) {
+                            default -> "America"; // 0x01
+                            case 0x02 -> "Europe";
+                            case 0x03 -> "China";
+                        };
+                    } else {
+                        region = "Unknown";
+                    }
+
+
+                    callback.onReaderSN(
+                            sn, region, rfBand[1], rfBand[2]
+                    );
+                }
 
                 case ParamCts.BROADCAST_BATTERY_VOLTAGE -> callback.onBatteryVoltage(
                         intent.getIntExtra(ParamCts.BATTERY_VOLTAGE, 0)
