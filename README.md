@@ -9,6 +9,12 @@ npm install @kduma-autoid/capacitor-sunmi-uhf
 npx cap sync
 ```
 
+Add following entry to your `android/settings.gradle` file:
+```grovy
+include ':sunmi-scanner-sdk'
+project(':sunmi-scanner-sdk').projectDir = new File('../node_modules/@kduma-autoid/capacitor-sunmi-uhf/android/libs/sunmi-scanner-sdk')
+```
+
 ## API
 
 <docgen-index>
