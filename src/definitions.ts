@@ -339,7 +339,7 @@ export interface SunmiUHFPlugin {
    */
   addListener(
       eventName: 'onReaderSN',
-      listenerFunc: (event: { sn: string, region: string, band_low: number, band_high: number  }) => void,
+      listenerFunc: (event: { sn: string, region: "America"|"Europe"|"China"|"Unknown", band_low: number, band_high: number  }) => void,
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   /**

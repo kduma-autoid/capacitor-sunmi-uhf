@@ -665,15 +665,15 @@ Listens for UHF firmware version events.
 ### addListener('onReaderSN', ...)
 
 ```typescript
-addListener(eventName: 'onReaderSN', listenerFunc: (event: { sn: string; region: string; band_low: number; band_high: number; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'onReaderSN', listenerFunc: (event: { sn: string; region: "America" | "Europe" | "China" | "Unknown"; band_low: number; band_high: number; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
 Listens for reader serial number events.
 
-| Param              | Type                                                                                                  |
-| ------------------ | ----------------------------------------------------------------------------------------------------- |
-| **`eventName`**    | <code>'onReaderSN'</code>                                                                             |
-| **`listenerFunc`** | <code>(event: { sn: string; region: string; band_low: number; band_high: number; }) =&gt; void</code> |
+| Param              | Type                                                                                                                                         |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'onReaderSN'</code>                                                                                                                    |
+| **`listenerFunc`** | <code>(event: { sn: string; region: 'Unknown' \| 'America' \| 'Europe' \| 'China'; band_low: number; band_high: number; }) =&gt; void</code> |
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 
