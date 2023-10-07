@@ -6,26 +6,14 @@ import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
-import com.sunmi.rfid.RFIDHelper;
-import com.sunmi.rfid.RFIDManager;
-
-import dev.duma.capacitor.sunmiuhf.internals.RFID6CTagInventory;
-import dev.duma.capacitor.sunmiuhf.internals.RFID6CTagOperations;
-import dev.duma.capacitor.sunmiuhf.internals.RFIDBasicInformation;
 
 @CapacitorPlugin(name = "SunmiUHF")
 public class SunmiUHFPlugin extends Plugin {
-    private final RFID6CTagInventory tagInventory = new RFID6CTagInventory();
-    private final RFID6CTagOperations tagOperations = new RFID6CTagOperations();
-    private final RFIDBasicInformation basicInformation = new RFIDBasicInformation();
+    private SunmiUHF implementation;
 
     @Override
     public void load() {
-        super.load();
-        tagInventory.bridge = bridge;
-
-        RFIDManager.getInstance().setPrintLog(true);
-        RFIDManager.getInstance().connect(getContext());
+        implementation = new SunmiUHF(this);
     }
 
     // OnTerminate -> RFIDManager.getInstance().disconnect();
@@ -33,9 +21,7 @@ public class SunmiUHFPlugin extends Plugin {
     @PluginMethod
     public void getScanModel(PluginCall call) throws RemoteException {
         try {
-            RFIDHelper helper = getRfidHelper();
-
-            basicInformation.getScanModel(helper, call, bridge);
+            implementation.basicInformation().getScanModel(call, bridge);
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }
@@ -44,9 +30,7 @@ public class SunmiUHFPlugin extends Plugin {
     @PluginMethod
     public void startScanning(PluginCall call) {
         try {
-            RFIDHelper helper = getRfidHelper();
-
-            tagInventory.startScanning(helper, call, bridge);
+            implementation.tagInventory().startScanning(call, bridge);
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }
@@ -55,9 +39,7 @@ public class SunmiUHFPlugin extends Plugin {
     @PluginMethod(returnType = PluginMethod.RETURN_CALLBACK)
     public void setTagReadCallback(PluginCall call) {
         try {
-            RFIDHelper helper = getRfidHelper();
-
-            tagInventory.setTagReadCallback(helper, call, bridge);
+            implementation.tagInventory().setTagReadCallback(call, bridge);
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }
@@ -66,9 +48,7 @@ public class SunmiUHFPlugin extends Plugin {
     @PluginMethod(returnType = PluginMethod.RETURN_NONE)
     public void clearTagReadCallback(PluginCall call) {
         try {
-            RFIDHelper helper = getRfidHelper();
-
-            tagInventory.clearTagReadCallback(bridge);
+            implementation.tagInventory().clearTagReadCallback(bridge);
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }
@@ -77,9 +57,7 @@ public class SunmiUHFPlugin extends Plugin {
     @PluginMethod(returnType = PluginMethod.RETURN_CALLBACK)
     public void setInventoryScanCompletedCallback(PluginCall call) {
         try {
-            RFIDHelper helper = getRfidHelper();
-
-            tagInventory.setInventoryScanCompletedCallback(helper, call, bridge);
+            implementation.tagInventory().setInventoryScanCompletedCallback(call, bridge);
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }
@@ -88,9 +66,7 @@ public class SunmiUHFPlugin extends Plugin {
     @PluginMethod(returnType = PluginMethod.RETURN_NONE)
     public void clearInventoryScanCompletedCallback(PluginCall call) {
         try {
-            RFIDHelper helper = getRfidHelper();
-
-            tagInventory.clearInventoryScanCompletedCallback(bridge);
+            implementation.tagInventory().clearInventoryScanCompletedCallback(bridge);
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }
@@ -99,9 +75,7 @@ public class SunmiUHFPlugin extends Plugin {
     @PluginMethod
     public void stopScanning(PluginCall call) {
         try {
-            RFIDHelper helper = getRfidHelper();
-
-            tagInventory.stopScanning(helper, call, bridge);
+            implementation.tagInventory().stopScanning(call, bridge);
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }
@@ -110,9 +84,7 @@ public class SunmiUHFPlugin extends Plugin {
     @PluginMethod
     public void getAccessEpcMatch(PluginCall call) {
         try {
-            RFIDHelper helper = getRfidHelper();
-
-            tagOperations.getAccessEpcMatch(helper, call, bridge);
+            implementation.tagOperations().getAccessEpcMatch(call, bridge);
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }
@@ -121,9 +93,7 @@ public class SunmiUHFPlugin extends Plugin {
     @PluginMethod
     public void setAccessEpcMatch(PluginCall call) {
         try {
-            RFIDHelper helper = getRfidHelper();
-
-            tagOperations.setAccessEpcMatch(helper, call, bridge);
+            implementation.tagOperations().setAccessEpcMatch(call, bridge);
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }
@@ -132,9 +102,7 @@ public class SunmiUHFPlugin extends Plugin {
     @PluginMethod
     public void cancelAccessEpcMatch(PluginCall call) {
         try {
-            RFIDHelper helper = getRfidHelper();
-
-            tagOperations.cancelAccessEpcMatch(helper, call, bridge);
+            implementation.tagOperations().cancelAccessEpcMatch(call, bridge);
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }
@@ -143,9 +111,7 @@ public class SunmiUHFPlugin extends Plugin {
     @PluginMethod
     public void readTag(PluginCall call) {
         try {
-            RFIDHelper helper = getRfidHelper();
-
-            tagOperations.readTag(helper, call, bridge);
+            implementation.tagOperations().readTag(call, bridge);
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }
@@ -154,9 +120,7 @@ public class SunmiUHFPlugin extends Plugin {
     @PluginMethod
     public void writeTag(PluginCall call) {
         try {
-            RFIDHelper helper = getRfidHelper();
-
-            tagOperations.writeTag(helper, call, bridge);
+            implementation.tagOperations().writeTag(call, bridge);
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }
@@ -165,9 +129,7 @@ public class SunmiUHFPlugin extends Plugin {
     @PluginMethod
     public void lockTag(PluginCall call) {
         try {
-            RFIDHelper helper = getRfidHelper();
-
-            tagOperations.lockTag(helper, call, bridge);
+            implementation.tagOperations().lockTag(call, bridge);
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }
@@ -176,9 +138,7 @@ public class SunmiUHFPlugin extends Plugin {
     @PluginMethod
     public void killTag(PluginCall call) {
         try {
-            RFIDHelper helper = getRfidHelper();
-
-            tagOperations.killTag(helper, call, bridge);
+            implementation.tagOperations().killTag(call, bridge);
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }
@@ -187,9 +147,7 @@ public class SunmiUHFPlugin extends Plugin {
     @PluginMethod
     public void getImpinjFastTid(PluginCall call) {
         try {
-            RFIDHelper helper = getRfidHelper();
-
-            tagOperations.getImpinjFastTid(helper, call, bridge);
+            implementation.tagOperations().getImpinjFastTid(call, bridge);
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }
@@ -198,25 +156,9 @@ public class SunmiUHFPlugin extends Plugin {
     @PluginMethod
     public void setImpinjFastTid(PluginCall call) {
         try {
-            RFIDHelper helper = getRfidHelper();
-
-            tagOperations.setImpinjFastTid(helper, call, bridge);
+            implementation.tagOperations().setImpinjFastTid(call, bridge);
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }
-    }
-
-    private RFIDHelper getRfidHelper() {
-        RFIDManager rfidManager = RFIDManager.getInstance();
-        if(!rfidManager.isConnect()) {
-            throw new RuntimeException("RFIDManager not connected!");
-        }
-
-        RFIDHelper helper = rfidManager.getHelper();
-        if(helper == null) {
-            throw new RuntimeException("RFIDHelper is not available!");
-        }
-
-        return helper;
     }
 }

@@ -19,9 +19,12 @@ import org.json.JSONObject;
 import java.util.Objects;
 
 import dev.duma.capacitor.sunmiuhf.StrTools;
+import dev.duma.capacitor.sunmiuhf.SunmiUHF;
 
 public class RFID6CTagOperations {
-    public void setImpinjFastTid(RFIDHelper helper, PluginCall call, Bridge bridge) {
+    public void setImpinjFastTid(PluginCall call, Bridge bridge) {
+        RFIDHelper helper = SunmiUHF.getRfidHelper();
+
         boolean blnOpen = Boolean.TRUE.equals(call.getBoolean("enable", false));
         boolean blnSave = Boolean.TRUE.equals(call.getBoolean("save", false));
 
@@ -77,7 +80,9 @@ public class RFID6CTagOperations {
         helper.setImpinjFastTid(blnOpen, blnSave);
     }
 
-    public void getImpinjFastTid(RFIDHelper helper, PluginCall call, Bridge bridge) {
+    public void getImpinjFastTid(PluginCall call, Bridge bridge) {
+        RFIDHelper helper = SunmiUHF.getRfidHelper();
+
         helper.registerReaderCall(new ReaderCall() {
             @Override
             public void onSuccess(byte cmd, @Nullable DataParameter params) throws RemoteException {
@@ -132,7 +137,9 @@ public class RFID6CTagOperations {
         helper.getImpinjFastTid();
     }
 
-    public void setAccessEpcMatch(RFIDHelper helper, PluginCall call, Bridge bridge) {
+    public void setAccessEpcMatch(PluginCall call, Bridge bridge) {
+        RFIDHelper helper = SunmiUHF.getRfidHelper();
+
         String epc = call.getString("epc", "");
         byte[] epcBytes = StrTools.hexStrToByteArray(epc);
 
@@ -189,7 +196,9 @@ public class RFID6CTagOperations {
         helper.setAccessEpcMatch((byte) epcBytes.length, epcBytes);
     }
 
-    public void getAccessEpcMatch(RFIDHelper helper, PluginCall call, Bridge bridge) {
+    public void getAccessEpcMatch(PluginCall call, Bridge bridge) {
+        RFIDHelper helper = SunmiUHF.getRfidHelper();
+
         helper.registerReaderCall(new ReaderCall() {
             @Override
             public void onSuccess(byte cmd, @Nullable DataParameter params) throws RemoteException {
@@ -244,7 +253,9 @@ public class RFID6CTagOperations {
         helper.getAccessEpcMatch();
     }
 
-    public void cancelAccessEpcMatch(RFIDHelper helper, PluginCall call, Bridge bridge) {
+    public void cancelAccessEpcMatch(PluginCall call, Bridge bridge) {
+        RFIDHelper helper = SunmiUHF.getRfidHelper();
+
         helper.registerReaderCall(new ReaderCall() {
             @Override
             public void onSuccess(byte cmd, @Nullable DataParameter params) throws RemoteException {
@@ -298,7 +309,9 @@ public class RFID6CTagOperations {
         helper.cancelAccessEpcMatch();
     }
 
-    public void readTag(RFIDHelper helper, PluginCall call, Bridge bridge) {
+    public void readTag(PluginCall call, Bridge bridge) {
+        RFIDHelper helper = SunmiUHF.getRfidHelper();
+
         byte btMemBank;
         switch(Objects.requireNonNull(call.getString("bank"))) {
             case "RESERVED":
@@ -381,7 +394,9 @@ public class RFID6CTagOperations {
         helper.readTag(btMemBank, btWordAdd, btWordCnt, btAryPassWord);
     }
 
-    public void writeTag(RFIDHelper helper, PluginCall call, Bridge bridge) {
+    public void writeTag(PluginCall call, Bridge bridge) {
+        RFIDHelper helper = SunmiUHF.getRfidHelper();
+
         byte btMemBank;
         switch(Objects.requireNonNull(call.getString("bank"))) {
             case "RESERVED":
@@ -470,7 +485,9 @@ public class RFID6CTagOperations {
         helper.writeTag(btAryPassWord, btMemBank, btWordAdd, btWordCnt, btAryData);
     }
 
-    public void lockTag(RFIDHelper helper, PluginCall call, Bridge bridge) {
+    public void lockTag(PluginCall call, Bridge bridge) {
+        RFIDHelper helper = SunmiUHF.getRfidHelper();
+
         byte btMemBank;
         switch(Objects.requireNonNull(call.getString("bank"))) {
             case "USER":
@@ -573,7 +590,9 @@ public class RFID6CTagOperations {
         helper.lockTag(btAryPassWord, btMemBank, btLockType);
     }
 
-    public void killTag(RFIDHelper helper, PluginCall call, Bridge bridge) {
+    public void killTag(PluginCall call, Bridge bridge) {
+        RFIDHelper helper = SunmiUHF.getRfidHelper();
+
         byte[] btAryPassWord = StrTools.hexStrToByteArray(Objects.requireNonNull(call.getString("password", "00000000")));
 
         helper.registerReaderCall(new ReaderCall() {

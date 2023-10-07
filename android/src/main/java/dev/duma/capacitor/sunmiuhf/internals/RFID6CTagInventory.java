@@ -20,9 +20,14 @@ import org.json.JSONObject;
 import java.util.Objects;
 
 import dev.duma.capacitor.sunmiuhf.StrTools;
+import dev.duma.capacitor.sunmiuhf.SunmiUHF;
 
 public class RFID6CTagInventory {
-    public Bridge bridge;
+    private Bridge bridge;
+
+    public RFID6CTagInventory(Bridge bridge) {
+        this.bridge = bridge;
+    }
 
     private byte repeat_times = (byte) 3;
     boolean state = false;
@@ -137,13 +142,17 @@ public class RFID6CTagInventory {
     private String tagReadCallbackId = null;
     private String inventoryScanCompletedCallbackId = null;
 
-    public void stopScanning(RFIDHelper helper, PluginCall call, Bridge bridge) {
+    public void stopScanning(PluginCall call, Bridge bridge) {
+        RFIDHelper helper = SunmiUHF.getRfidHelper();
+
         state = false;
         stop(helper);
         call.resolve();
     }
 
-    public void startScanning(RFIDHelper helper, PluginCall call, Bridge bridge) {
+    public void startScanning(PluginCall call, Bridge bridge) {
+        RFIDHelper helper = SunmiUHF.getRfidHelper();
+
         state = true;
         repeat_times = Objects.requireNonNull(call.getInt("call", 3)).byteValue();
         start(helper);
@@ -172,7 +181,9 @@ public class RFID6CTagInventory {
         return bridge.getSavedCall(tagReadCallbackId);
     }
 
-    public void setTagReadCallback(RFIDHelper helper, PluginCall call, Bridge bridge) {
+    public void setTagReadCallback(PluginCall call, Bridge bridge) {
+        RFIDHelper helper = SunmiUHF.getRfidHelper();
+
         if(tagReadCallbackId != null) {
             clearTagReadCallback(bridge);
         }
@@ -200,7 +211,9 @@ public class RFID6CTagInventory {
         return bridge.getSavedCall(inventoryScanCompletedCallbackId);
     }
 
-    public void setInventoryScanCompletedCallback(RFIDHelper helper, PluginCall call, Bridge bridge) {
+    public void setInventoryScanCompletedCallback(PluginCall call, Bridge bridge) {
+        RFIDHelper helper = SunmiUHF.getRfidHelper();
+
         if(inventoryScanCompletedCallbackId != null) {
             clearInventoryScanCompletedCallback(bridge);
         }
