@@ -11,6 +11,12 @@ import com.sunmi.rfid.RFIDManager;
 import dev.duma.capacitor.sunmiuhf.SunmiUHF;
 
 public class RFIDBasicInformation {
+    private final SunmiUHF uhf;
+
+    public RFIDBasicInformation(SunmiUHF uhf) {
+        this.uhf = uhf;
+    }
+
     public void getScanModel(PluginCall call, Bridge bridge) throws RemoteException {
         RFIDHelper helper = SunmiUHF.getRfidHelper();
 

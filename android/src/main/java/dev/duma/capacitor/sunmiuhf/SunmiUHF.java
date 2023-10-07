@@ -1,9 +1,5 @@
 package dev.duma.capacitor.sunmiuhf;
 
-import android.content.Context;
-import android.util.Log;
-
-import com.getcapacitor.Bridge;
 import com.getcapacitor.Plugin;
 import com.sunmi.rfid.RFIDHelper;
 import com.sunmi.rfid.RFIDManager;
@@ -13,17 +9,24 @@ import dev.duma.capacitor.sunmiuhf.internals.RFID6CTagOperations;
 import dev.duma.capacitor.sunmiuhf.internals.RFIDBasicInformation;
 
 public class SunmiUHF {
+    private Plugin plugin;
     private final RFID6CTagInventory tagInventory;
     private final RFID6CTagOperations tagOperations;
     private final RFIDBasicInformation basicInformation;
 
     public SunmiUHF(Plugin plugin) {
-        tagInventory = new RFID6CTagInventory(plugin.getBridge());
-        tagOperations = new RFID6CTagOperations();
-        basicInformation = new RFIDBasicInformation();
+        this.plugin = plugin;
+
+        tagInventory = new RFID6CTagInventory(this);
+        tagOperations = new RFID6CTagOperations(this);
+        basicInformation = new RFIDBasicInformation(this);
 
         RFIDManager.getInstance().setPrintLog(true);
         RFIDManager.getInstance().connect(plugin.getContext());
+    }
+
+    public Plugin getPlugin() {
+        return plugin;
     }
 
     public RFID6CTagInventory tagInventory() {

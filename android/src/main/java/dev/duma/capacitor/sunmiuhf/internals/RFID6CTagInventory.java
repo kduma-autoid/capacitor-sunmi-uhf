@@ -23,10 +23,14 @@ import dev.duma.capacitor.sunmiuhf.StrTools;
 import dev.duma.capacitor.sunmiuhf.SunmiUHF;
 
 public class RFID6CTagInventory {
-    private Bridge bridge;
+    private final SunmiUHF uhf;
 
-    public RFID6CTagInventory(Bridge bridge) {
-        this.bridge = bridge;
+    public RFID6CTagInventory(SunmiUHF uhf) {
+        this.uhf = uhf;
+    }
+
+    private Bridge getBridge() {
+        return uhf.getPlugin().getBridge();
     }
 
     private byte repeat_times = (byte) 3;
@@ -58,7 +62,7 @@ public class RFID6CTagInventory {
                     if (call != null) {
                         call.resolve(ret);
                     } else {
-                        bridge.triggerWindowJSEvent("sunmi_uhf_read_completed", ret.toString());
+                        getBridge().triggerWindowJSEvent("sunmi_uhf_read_completed", ret.toString());
                     }
                 }
             } else {
@@ -68,7 +72,7 @@ public class RFID6CTagInventory {
                     json.put("cmd", cmd);
                     json.put("params", params != null ? params.toString() : null);
 
-                    bridge.triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
+                    getBridge().triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
@@ -111,7 +115,7 @@ public class RFID6CTagInventory {
                 if (call != null) {
                     call.resolve(ret);
                 } else {
-                    bridge.triggerWindowJSEvent("sunmi_uhf_tag_read", ret.toString());
+                    getBridge().triggerWindowJSEvent("sunmi_uhf_tag_read", ret.toString());
                 }
             } else {
                 ret.put("action", "onTag");
@@ -119,7 +123,7 @@ public class RFID6CTagInventory {
                 ret.put("state", state);
                 ret.put("tag", tag != null ? StrTools.normalizeHexStr(tag.toString(), true) : null);
 
-                bridge.triggerWindowJSEvent("sunmi_uhf_debug", ret.toString());
+                getBridge().triggerWindowJSEvent("sunmi_uhf_debug", ret.toString());
             }
         }
 
@@ -132,7 +136,7 @@ public class RFID6CTagInventory {
                 json.put("errorCode", errorCode);
                 json.put("msg", msg);
 
-                bridge.triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
+                getBridge().triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
@@ -168,8 +172,8 @@ public class RFID6CTagInventory {
     private void stop(RFIDHelper helper) {
         helper.inventory((byte) 1);
         helper.unregisterReaderCall();
-        clearTagReadCallback(bridge);
-        clearInventoryScanCompletedCallback(bridge);
+        clearTagReadCallback(getBridge());
+        clearInventoryScanCompletedCallback(getBridge());
     }
 
     @Nullable
@@ -178,7 +182,7 @@ public class RFID6CTagInventory {
             return null;
         }
 
-        return bridge.getSavedCall(tagReadCallbackId);
+        return getBridge().getSavedCall(tagReadCallbackId);
     }
 
     public void setTagReadCallback(PluginCall call, Bridge bridge) {
@@ -208,7 +212,7 @@ public class RFID6CTagInventory {
             return null;
         }
 
-        return bridge.getSavedCall(inventoryScanCompletedCallbackId);
+        return getBridge().getSavedCall(inventoryScanCompletedCallbackId);
     }
 
     public void setInventoryScanCompletedCallback(PluginCall call, Bridge bridge) {
