@@ -20,6 +20,7 @@ project(':sunmi-scanner-sdk').projectDir = new File('../node_modules/@kduma-auto
 <docgen-index>
 
 * [`getScanModel()`](#getscanmodel)
+* [`refreshBatteryState()`](#refreshbatterystate)
 * [`startScanning(...)`](#startscanning)
 * [`setTagReadCallback(...)`](#settagreadcallback)
 * [`clearTagReadCallback()`](#cleartagreadcallback)
@@ -37,6 +38,9 @@ project(':sunmi-scanner-sdk').projectDir = new File('../node_modules/@kduma-auto
 * [`getImpinjFastTid()`](#getimpinjfasttid)
 * [`addListener('onReaderConnected', ...)`](#addlisteneronreaderconnected)
 * [`addListener('onReaderDisconnected', ...)`](#addlisteneronreaderdisconnected)
+* [`addListener('onBatteryState', ...)`](#addlisteneronbatterystate)
+* [`addListener('onBatteryCharging', ...)`](#addlisteneronbatterycharging)
+* [`addListener('onBatteryChargingNumTimes', ...)`](#addlisteneronbatterychargingnumtimes)
 * [`removeAllListeners()`](#removealllisteners)
 * [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
@@ -60,6 +64,19 @@ Get RFID type
 - `available` - Whether the RFID module is available.
 
 **Returns:** <code>Promise&lt;{ model: 'UHF_S7100' | 'UHF_R2000' | 'INNER' | 'NONE' | 'UNKNOWN'; available: boolean; }&gt;</code>
+
+--------------------
+
+
+### refreshBatteryState()
+
+```typescript
+refreshBatteryState() => Promise<void> | void
+```
+
+Refreshes the battery state. The resulting battery state will be returned in `onBatteryState` and `onBatteryCharging` events.
+
+**Returns:** <code>void | Promise&lt;void&gt;</code>
 
 --------------------
 
@@ -374,6 +391,54 @@ Listens for reader disconnected or lost connection events.
 | ------------------ | ----------------------------------- |
 | **`eventName`**    | <code>'onReaderDisconnected'</code> |
 | **`listenerFunc`** | <code>() =&gt; void</code>          |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### addListener('onBatteryState', ...)
+
+```typescript
+addListener(eventName: 'onBatteryState', listenerFunc: (event: { charge_level: number; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+| Param              | Type                                                       |
+| ------------------ | ---------------------------------------------------------- |
+| **`eventName`**    | <code>'onBatteryState'</code>                              |
+| **`listenerFunc`** | <code>(event: { charge_level: number; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### addListener('onBatteryCharging', ...)
+
+```typescript
+addListener(eventName: 'onBatteryCharging', listenerFunc: (event: { state: "Unknown" | "NotCharging" | "PreCharging" | "QuickCharging" | "Charged"; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+| Param              | Type                                                                                                                     |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| **`eventName`**    | <code>'onBatteryCharging'</code>                                                                                         |
+| **`listenerFunc`** | <code>(event: { state: 'Unknown' \| 'NotCharging' \| 'PreCharging' \| 'QuickCharging' \| 'Charged'; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### addListener('onBatteryChargingNumTimes', ...)
+
+```typescript
+addListener(eventName: 'onBatteryChargingNumTimes', listenerFunc: (event: { battery_cycles: number; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+| Param              | Type                                                         |
+| ------------------ | ------------------------------------------------------------ |
+| **`eventName`**    | <code>'onBatteryChargingNumTimes'</code>                     |
+| **`listenerFunc`** | <code>(event: { battery_cycles: number; }) =&gt; void</code> |
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 

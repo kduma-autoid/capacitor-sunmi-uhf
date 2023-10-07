@@ -83,6 +83,7 @@ window.customElements.define(
         <button id='stop_scan'>stopScanning()</button>
         <hr>
         <button id='get_model'>getScanModel</button>
+        <button id='refresh_battery_state'>refreshBatteryState</button>
         <hr>
         <button id='setAccessEpcMatch'>setAccessEpcMatch(<span id='first_epc'>first</span>')</button>
         <button id='cancelAccessEpcMatch'>cancelAccessEpcMatch()</button>
@@ -319,6 +320,15 @@ window.customElements.define(
         }
       });
 
+      self.shadowRoot.querySelector('#refresh_battery_state').addEventListener('click', async function (e) {
+        try {
+          const data = await SunmiUHF.refreshBatteryState();
+          printToOutput('refreshBatteryState()', data);
+        } catch (error) {
+          printToOutput('refreshBatteryState() - ERROR', { code: error.code, message: error.message });
+        }
+      });
+
       self.shadowRoot.querySelector('#setImpinjFastTid').addEventListener('click', async function (e) {
         try {
           const data = await SunmiUHF.setImpinjFastTid({enable: true});
@@ -406,6 +416,9 @@ window.customElements.define(
 
       SunmiUHF.addListener("onReaderDisconnected", () => printToOutput('onReaderDisconnected', {}));
       SunmiUHF.addListener("onReaderConnected", () => printToOutput('onReaderConnected', {}));
+      SunmiUHF.addListener("onBatteryState", (e) => printToOutput('onBatteryState', e));
+      SunmiUHF.addListener("onBatteryCharging", (e) => printToOutput('onBatteryCharging', e));
+      SunmiUHF.addListener("onBatteryChargingNumTimes", (e) => printToOutput('onBatteryChargingNumTimes', e));
     }
   }
 );

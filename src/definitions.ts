@@ -16,6 +16,11 @@ export interface SunmiUHFPlugin {
   getScanModel(): Promise<{ model: "UHF_S7100"|"UHF_R2000"|"INNER"|"NONE"|"UNKNOWN", available: boolean }>;
 
   /**
+   * Refreshes the battery state. The resulting battery state will be returned in `onBatteryState` and `onBatteryCharging` events.
+   */
+  refreshBatteryState(): Promise<void>|void;
+
+  /**
    * Starts scanning inventory operation
    *
    * **Parameters:**
@@ -181,6 +186,30 @@ export interface SunmiUHFPlugin {
   addListener(
       eventName: 'onReaderDisconnected',
       listenerFunc: () => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   *
+   */
+  addListener(
+      eventName: 'onBatteryState',
+      listenerFunc: (event: { charge_level: number }) => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   *
+   */
+  addListener(
+      eventName: 'onBatteryCharging',
+      listenerFunc: (event: { state: "Unknown"|"NotCharging"|"PreCharging"|"QuickCharging"|"Charged" }) => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   *
+   */
+  addListener(
+      eventName: 'onBatteryChargingNumTimes',
+      listenerFunc: (event: { battery_cycles: number  }) => void,
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   /**

@@ -27,6 +27,10 @@ export class SunmiUHFWeb extends WebPlugin implements SunmiUHFPlugin {
     throw this.unimplemented('Not implemented on web.');
   }
 
+  refreshBatteryState(): Promise<void> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
   stopScanning(): Promise<void> {
     throw this.unimplemented('Not implemented on web.');
   }

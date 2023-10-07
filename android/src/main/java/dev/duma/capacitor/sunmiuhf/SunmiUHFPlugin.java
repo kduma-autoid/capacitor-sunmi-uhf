@@ -8,6 +8,8 @@ import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
+import dev.duma.capacitor.sunmiuhf.internals.models.BatteryChargingStateEnum;
+
 @CapacitorPlugin(name = "SunmiUHF")
 public class SunmiUHFPlugin extends Plugin {
     private SunmiUHF implementation;
@@ -26,7 +28,36 @@ public class SunmiUHFPlugin extends Plugin {
             public void onReaderDisconnected() {
                 notifyListeners("onReaderDisconnected", new JSObject());
             }
+
+            @Override
+            public void onBatteryState(int charge_level) {
+                JSObject ret = new JSObject();
+                ret.put("charge_level", charge_level);
+                notifyListeners("onBatteryState", ret);
+            }
+
+            @Override
+            public void onBatteryChargingNumTimes(int battery_cycles) {
+                JSObject ret = new JSObject();
+                ret.put("battery_cycles", battery_cycles);
+                notifyListeners("onBatteryChargingNumTimes", ret);
+            }
+
+            @Override
+            public void onBatteryCharging(BatteryChargingStateEnum state) {
+                JSObject ret = new JSObject();
+                ret.put("state", switch (state) {
+                    case Unknown -> "Unknown";
+                    case NotCharging -> "NotCharging";
+                    case PreCharging -> "PreCharging";
+                    case QuickCharging -> "QuickCharging";
+                    case Charged -> "Charged";
+                });
+                notifyListeners("onBatteryCharging", ret);
+            }
         });
+
+        implementation.getBroadcastReceiver().register();
     }
 
     // OnTerminate -> RFIDManager.getInstance().disconnect();
@@ -40,6 +71,16 @@ public class SunmiUHFPlugin extends Plugin {
                 ret.put("available", available);
                 call.resolve(ret);
             });
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void refreshBatteryState(PluginCall call) throws RemoteException {
+        try {
+            implementation.basicInformation().refreshBatteryState();
+            call.resolve();
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);
         }
