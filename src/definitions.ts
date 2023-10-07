@@ -196,6 +196,13 @@ export interface SunmiUHFPlugin {
   getBatteryVoltage(): Promise<void>;
 
   /**
+   * Refreshes the UHF firmware version. The resulting UHF firmware version will be returned in `onFirmwareVersion` events.
+   *
+   * @throws {Error} If the device does not support this feature.
+   */
+  getFirmwareVersion(): Promise<void>;
+
+  /**
    * Listens for reader connected events.
    */
   addListener(
@@ -289,6 +296,14 @@ export interface SunmiUHFPlugin {
   addListener(
       eventName: 'onBatteryVoltage',
       listenerFunc: (event: { voltage: number  }) => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for UHF firmware version events.
+   */
+  addListener(
+      eventName: 'onFirmwareVersion',
+      listenerFunc: (event: { version: string, major: number, minor: number  }) => void,
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   /**

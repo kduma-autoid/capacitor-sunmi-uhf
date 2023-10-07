@@ -87,6 +87,7 @@ window.customElements.define(
         <button id='getBatteryRemainingPercent'>getBatteryRemainingPercent()</button>
         <button id='getBatteryChargeNumTimes'>getBatteryChargeNumTimes()</button>
         <button id='getBatteryVoltage'>getBatteryVoltage()</button>
+        <button id='getFirmwareVersion'>getFirmwareVersion()</button>
         <hr>
         <button id='setAccessEpcMatch'>setAccessEpcMatch(<span id='first_epc'>first</span>')</button>
         <button id='cancelAccessEpcMatch'>cancelAccessEpcMatch()</button>
@@ -286,6 +287,10 @@ window.customElements.define(
           'tag': 'getBatteryVoltage()',
           'handler': async () => await SunmiUHF.getBatteryVoltage()
         },
+        'getFirmwareVersion': {
+          'tag': 'getFirmwareVersion()',
+          'handler': async () => await SunmiUHF.getFirmwareVersion()
+        },
         'setImpinjFastTid': {
           'tag': 'setImpinjFastTid(true)',
           'handler': async () => await SunmiUHF.setImpinjFastTid({enable: true})
@@ -386,6 +391,8 @@ window.customElements.define(
       SunmiUHF.addListener("onBatteryChargeNumTimes", (e) => printToOutput('onBatteryChargeNumTimes', e));
 
       SunmiUHF.addListener("onBatteryVoltage", (e) => printToOutput('onBatteryVoltage', e));
+
+      SunmiUHF.addListener("onFirmwareVersion", (e) => printToOutput('onFirmwareVersion', e));
     }
   }
 );

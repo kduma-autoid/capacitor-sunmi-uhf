@@ -23,6 +23,7 @@ public class SunmiUHFBroadcastReceiver {
         void onBatteryChargeState(BatteryChargingStateEnum state);
         void onBatteryChargeNumTimes(int battery_cycles);
         void onBatteryVoltage(int voltage);
+        void onFirmwareVersion(int major, int minor);
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -60,6 +61,11 @@ public class SunmiUHFBroadcastReceiver {
 
                 case ParamCts.BROADCAST_BATTER_CHARGING_NUM_TIMES -> callback.onBatteryChargeNumTimes(
                         intent.getIntExtra(ParamCts.BATTERY_CHARGING_NUM_TIMES, 0)
+                );
+
+                case ParamCts.BROADCAST_FIRMWARE_VERSION -> callback.onFirmwareVersion(
+                        intent.getIntExtra(ParamCts.FIRMWARE_MAIN_VERSION, 0),
+                        intent.getIntExtra(ParamCts.FIRMWARE_MIN_VERSION, 0)
                 );
 
                 case ParamCts.BROADCAST_BATTERY_VOLTAGE -> callback.onBatteryVoltage(

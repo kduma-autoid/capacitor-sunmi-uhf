@@ -39,6 +39,7 @@ project(':sunmi-scanner-sdk').projectDir = new File('../node_modules/@kduma-auto
 * [`getBatteryRemainingPercent()`](#getbatteryremainingpercent)
 * [`getBatteryChargeNumTimes()`](#getbatterychargenumtimes)
 * [`getBatteryVoltage()`](#getbatteryvoltage)
+* [`getFirmwareVersion()`](#getfirmwareversion)
 * [`addListener('onReaderConnected', ...)`](#addlisteneronreaderconnected)
 * [`addListener('onReaderBoot', ...)`](#addlisteneronreaderboot)
 * [`addListener('onReaderBootOrConnected', ...)`](#addlisteneronreaderbootorconnected)
@@ -51,6 +52,7 @@ project(':sunmi-scanner-sdk').projectDir = new File('../node_modules/@kduma-auto
 * [`addListener('onBatteryChargeState', ...)`](#addlisteneronbatterychargestate)
 * [`addListener('onBatteryChargeNumTimes', ...)`](#addlisteneronbatterychargenumtimes)
 * [`addListener('onBatteryVoltage', ...)`](#addlisteneronbatteryvoltage)
+* [`addListener('onFirmwareVersion', ...)`](#addlisteneronfirmwareversion)
 * [`removeAllListeners()`](#removealllisteners)
 * [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
@@ -402,6 +404,17 @@ Refreshes the battery voltage. The resulting battery voltage will be returned in
 --------------------
 
 
+### getFirmwareVersion()
+
+```typescript
+getFirmwareVersion() => Promise<void>
+```
+
+Refreshes the UHF firmware version. The resulting UHF firmware version will be returned in `onFirmwareVersion` events.
+
+--------------------
+
+
 ### addListener('onReaderConnected', ...)
 
 ```typescript
@@ -612,6 +625,24 @@ Listens for battery voltage events.
 | ------------------ | ----------------------------------------------------- |
 | **`eventName`**    | <code>'onBatteryVoltage'</code>                       |
 | **`listenerFunc`** | <code>(event: { voltage: number; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### addListener('onFirmwareVersion', ...)
+
+```typescript
+addListener(eventName: 'onFirmwareVersion', listenerFunc: (event: { version: string; major: number; minor: number; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+Listens for UHF firmware version events.
+
+| Param              | Type                                                                                |
+| ------------------ | ----------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'onFirmwareVersion'</code>                                                    |
+| **`listenerFunc`** | <code>(event: { version: string; major: number; minor: number; }) =&gt; void</code> |
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 
