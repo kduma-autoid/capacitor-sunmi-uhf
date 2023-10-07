@@ -18,7 +18,9 @@ public class SunmiUHFPlugin extends Plugin {
 
     @Override
     public void load() {
-        implementation = new SunmiUHF(this);
+        boolean sdkDebugOutput = getConfig().getBoolean("SdkDebugOutput", false);
+
+        implementation = new SunmiUHF(this, sdkDebugOutput);
 
         implementation.getBroadcastReceiver().setCallback(new SunmiUHFBroadcastReceiver.ScanCallback() {
             @Override

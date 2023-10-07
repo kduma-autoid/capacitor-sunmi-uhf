@@ -9,6 +9,9 @@
     },
     "WebViewWatchDog": {
       "launchFailedHelpUrl": "https://autoid.duma.sh/watchdog/error/no-web-view"
+    },
+    "SunmiUHF": {
+      "SdkDebugOutput": true
     }
   }
 }
