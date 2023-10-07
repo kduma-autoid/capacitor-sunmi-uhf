@@ -1,5 +1,7 @@
 export type CallbackID = string;
 
+import type { PluginListenerHandle } from '@capacitor/core';
+
 export interface SunmiUHFPlugin {
   /**
    * Get RFID type
@@ -164,4 +166,25 @@ export interface SunmiUHFPlugin {
    * @see 2.4.3.9. in docs
    */
   getImpinjFastTid(): Promise<{ status: number, details: { start_time: number, end_time: number } }>;
+
+  /**
+   * Listens for reader connected or booted events.
+   */
+  addListener(
+      eventName: 'onReaderConnected',
+      listenerFunc: () => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for reader disconnected or lost connection events.
+   */
+  addListener(
+      eventName: 'onReaderDisconnected',
+      listenerFunc: () => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Removes all listeners
+   */
+  removeAllListeners(): Promise<void>;
 }

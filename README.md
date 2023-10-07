@@ -35,6 +35,10 @@ project(':sunmi-scanner-sdk').projectDir = new File('../node_modules/@kduma-auto
 * [`getAccessEpcMatch()`](#getaccessepcmatch)
 * [`setImpinjFastTid(...)`](#setimpinjfasttid)
 * [`getImpinjFastTid()`](#getimpinjfasttid)
+* [`addListener('onReaderConnected', ...)`](#addlisteneronreaderconnected)
+* [`addListener('onReaderDisconnected', ...)`](#addlisteneronreaderdisconnected)
+* [`removeAllListeners()`](#removealllisteners)
+* [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
 
 </docgen-index>
@@ -45,17 +49,17 @@ project(':sunmi-scanner-sdk').projectDir = new File('../node_modules/@kduma-auto
 ### getScanModel()
 
 ```typescript
-getScanModel() => Promise<{ model: "UHF_R2000" | "INNER" | "NONE" | "UNKNOWN"; available: boolean; }>
+getScanModel() => Promise<{ model: "UHF_S7100" | "UHF_R2000" | "INNER" | "NONE" | "UNKNOWN"; available: boolean; }>
 ```
 
 Get RFID type
 
 **Returns:**
 
-- `model` - RFID type: `UHF_R2000` - UHF R2000, `INNER` - Inner RFID, `NONE` - No RFID module, `UNKNOWN` - Unknown RFID module.
+- `model` - RFID type: `UHF_S7100` - UHF S7100, `UHF_R2000` - UHF R2000, `INNER` - Inner RFID, `NONE` - No RFID module, `UNKNOWN` - Unknown RFID module.
 - `available` - Whether the RFID module is available.
 
-**Returns:** <code>Promise&lt;{ model: 'UHF_R2000' | 'INNER' | 'NONE' | 'UNKNOWN'; available: boolean; }&gt;</code>
+**Returns:** <code>Promise&lt;{ model: 'UHF_S7100' | 'UHF_R2000' | 'INNER' | 'NONE' | 'UNKNOWN'; available: boolean; }&gt;</code>
 
 --------------------
 
@@ -338,6 +342,63 @@ Tag operation – inquire FastTID
 **Returns:** <code>Promise&lt;{ status: number; details: { start_time: number; end_time: number; }; }&gt;</code>
 
 --------------------
+
+
+### addListener('onReaderConnected', ...)
+
+```typescript
+addListener(eventName: 'onReaderConnected', listenerFunc: () => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+Listens for reader connected or booted events.
+
+| Param              | Type                             |
+| ------------------ | -------------------------------- |
+| **`eventName`**    | <code>'onReaderConnected'</code> |
+| **`listenerFunc`** | <code>() =&gt; void</code>       |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### addListener('onReaderDisconnected', ...)
+
+```typescript
+addListener(eventName: 'onReaderDisconnected', listenerFunc: () => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+Listens for reader disconnected or lost connection events.
+
+| Param              | Type                                |
+| ------------------ | ----------------------------------- |
+| **`eventName`**    | <code>'onReaderDisconnected'</code> |
+| **`listenerFunc`** | <code>() =&gt; void</code>          |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### removeAllListeners()
+
+```typescript
+removeAllListeners() => Promise<void>
+```
+
+Removes all listeners
+
+--------------------
+
+
+### Interfaces
+
+
+#### PluginListenerHandle
+
+| Prop         | Type                                      |
+| ------------ | ----------------------------------------- |
+| **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
 
 
 ### Type Aliases

@@ -13,6 +13,7 @@ public class SunmiUHF {
     private final RFID6CTagInventory tagInventory;
     private final RFID6CTagOperations tagOperations;
     private final RFIDBasicInformation basicInformation;
+    private final SunmiUHFBroadcastReceiver broadcastReceiver;
 
     public SunmiUHF(Plugin plugin) {
         this.plugin = plugin;
@@ -20,6 +21,7 @@ public class SunmiUHF {
         tagInventory = new RFID6CTagInventory(this);
         tagOperations = new RFID6CTagOperations(this);
         basicInformation = new RFIDBasicInformation(this);
+        broadcastReceiver = new SunmiUHFBroadcastReceiver(this);
 
         RFIDManager.getInstance().setPrintLog(true);
         RFIDManager.getInstance().connect(plugin.getContext());
@@ -39,6 +41,10 @@ public class SunmiUHF {
 
     public RFIDBasicInformation basicInformation() {
         return basicInformation;
+    }
+
+    public SunmiUHFBroadcastReceiver getBroadcastReceiver() {
+        return broadcastReceiver;
     }
 
     public RFIDHelper RfidHelper() {

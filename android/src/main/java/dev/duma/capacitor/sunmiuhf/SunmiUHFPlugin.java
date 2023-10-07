@@ -8,8 +8,6 @@ import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
-import dev.duma.capacitor.sunmiuhf.internals.RFIDBasicInformation;
-
 @CapacitorPlugin(name = "SunmiUHF")
 public class SunmiUHFPlugin extends Plugin {
     private SunmiUHF implementation;
@@ -17,6 +15,18 @@ public class SunmiUHFPlugin extends Plugin {
     @Override
     public void load() {
         implementation = new SunmiUHF(this);
+
+        implementation.getBroadcastReceiver().setCallback(new SunmiUHFBroadcastReceiver.ScanCallback() {
+            @Override
+            public void onReaderConnected() {
+                notifyListeners("onReaderConnected", new JSObject());
+            }
+
+            @Override
+            public void onReaderDisconnected() {
+                notifyListeners("onReaderDisconnected", new JSObject());
+            }
+        });
     }
 
     // OnTerminate -> RFIDManager.getInstance().disconnect();
