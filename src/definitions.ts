@@ -1,3 +1,24 @@
+/// <reference types="@capacitor/cli" />
+
+declare module '@capacitor/cli' {
+  export interface PluginsConfig {
+    /**
+     * These config values are available:
+     */
+    SunmiUHF?: {
+      /**
+       * Whether to auto start the watchdog on application launch.
+       *
+       * @since 0.0.1
+       * @default false
+       * @example true
+       */
+      SdkDebugOutput?: boolean;
+    };
+  }
+}
+
+
 export type CallbackID = string;
 
 import type { PluginListenerHandle } from '@capacitor/core';

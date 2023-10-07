@@ -15,7 +15,7 @@ public class SunmiUHF {
     private final RFIDBasicInformation basicInformation;
     private final SunmiUHFBroadcastReceiver broadcastReceiver;
 
-    public SunmiUHF(Plugin plugin) {
+    public SunmiUHF(Plugin plugin, boolean sdkDebugOutput) {
         this.plugin = plugin;
 
         tagInventory = new RFID6CTagInventory(this);
@@ -23,7 +23,7 @@ public class SunmiUHF {
         basicInformation = new RFIDBasicInformation(this);
         broadcastReceiver = new SunmiUHFBroadcastReceiver(this);
 
-        RFIDManager.getInstance().setPrintLog(true);
+        RFIDManager.getInstance().setPrintLog(sdkDebugOutput);
         RFIDManager.getInstance().connect(plugin.getContext());
     }
 
