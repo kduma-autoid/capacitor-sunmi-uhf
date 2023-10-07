@@ -403,6 +403,9 @@ window.customElements.define(
       };
 
       SunmiKeyboardHandler.setKeyHandler({ key: HandleableKey.RFID }, handler);
+
+      SunmiUHF.addListener("onReaderDisconnected", () => printToOutput('onReaderDisconnected', {}));
+      SunmiUHF.addListener("onReaderConnected", () => printToOutput('onReaderConnected', {}));
     }
   }
 );
