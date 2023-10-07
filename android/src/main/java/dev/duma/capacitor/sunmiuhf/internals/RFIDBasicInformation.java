@@ -8,8 +8,12 @@ import com.getcapacitor.PluginCall;
 import com.sunmi.rfid.RFIDHelper;
 import com.sunmi.rfid.RFIDManager;
 
+import dev.duma.capacitor.sunmiuhf.SunmiUHF;
+
 public class RFIDBasicInformation {
-    public void getScanModel(RFIDHelper helper, PluginCall call, Bridge bridge) throws RemoteException {
+    public void getScanModel(PluginCall call, Bridge bridge) throws RemoteException {
+        RFIDHelper helper = SunmiUHF.getRfidHelper();
+
         int scanModel = helper.getScanModel();
         JSObject ret = new JSObject();
 
