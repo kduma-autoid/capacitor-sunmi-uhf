@@ -67,6 +67,13 @@ public class SunmiUHFPlugin extends Plugin {
             }
 
             @Override
+            public void onBatteryVoltage(int voltage) {
+                JSObject ret = new JSObject();
+                ret.put("battery_cycles", voltage);
+                notifyListeners("onBatteryVoltage", ret);
+            }
+
+            @Override
             public void onBatteryChargeState(BatteryChargingStateEnum state) {
                 JSObject ret = new JSObject();
                 ret.put("state", switch (state) {
@@ -123,6 +130,16 @@ public class SunmiUHFPlugin extends Plugin {
     public void getBatteryChargeNumTimes(PluginCall call) throws RemoteException {
         try {
             implementation.basicInformation().getBatteryChargeNumTimes();
+            call.resolve();
+        } catch (RuntimeException e) {
+            call.reject(e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void getBatteryVoltage(PluginCall call) throws RemoteException {
+        try {
+            implementation.basicInformation().getBatteryVoltage();
             call.resolve();
         } catch (RuntimeException e) {
             call.reject(e.getMessage(), e);

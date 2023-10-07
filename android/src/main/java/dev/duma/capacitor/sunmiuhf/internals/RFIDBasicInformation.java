@@ -67,4 +67,14 @@ public class RFIDBasicInformation {
             default -> throw new RuntimeException("Scanner model not supported: " + getScanModelName());
         }
     }
+
+    public void getBatteryVoltage() throws RemoteException {
+        RFIDHelper helper = uhf.RfidHelper();
+        switch (helper.getScanModel()) {
+            case RFIDManager.UHF_S7100, RFIDManager.UHF_R2000 -> {
+                helper.getBatteryVoltage();
+            }
+            default -> throw new RuntimeException("Scanner model not supported: " + getScanModelName());
+        }
+    }
 }

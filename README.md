@@ -38,6 +38,7 @@ project(':sunmi-scanner-sdk').projectDir = new File('../node_modules/@kduma-auto
 * [`getBatteryChargeState()`](#getbatterychargestate)
 * [`getBatteryRemainingPercent()`](#getbatteryremainingpercent)
 * [`getBatteryChargeNumTimes()`](#getbatterychargenumtimes)
+* [`getBatteryVoltage()`](#getbatteryvoltage)
 * [`addListener('onReaderConnected', ...)`](#addlisteneronreaderconnected)
 * [`addListener('onReaderBoot', ...)`](#addlisteneronreaderboot)
 * [`addListener('onReaderBootOrConnected', ...)`](#addlisteneronreaderbootorconnected)
@@ -49,6 +50,7 @@ project(':sunmi-scanner-sdk').projectDir = new File('../node_modules/@kduma-auto
 * [`addListener('onBatteryRemainingPercentOrLowElectricity', ...)`](#addlisteneronbatteryremainingpercentorlowelectricity)
 * [`addListener('onBatteryChargeState', ...)`](#addlisteneronbatterychargestate)
 * [`addListener('onBatteryChargeNumTimes', ...)`](#addlisteneronbatterychargenumtimes)
+* [`addListener('onBatteryVoltage', ...)`](#addlisteneronbatteryvoltage)
 * [`removeAllListeners()`](#removealllisteners)
 * [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
@@ -389,6 +391,17 @@ Refreshes the battery cycles. The resulting battery cycles will be returned in `
 --------------------
 
 
+### getBatteryVoltage()
+
+```typescript
+getBatteryVoltage() => Promise<void>
+```
+
+Refreshes the battery voltage. The resulting battery voltage will be returned in `onBatteryVoltage` events.
+
+--------------------
+
+
 ### addListener('onReaderConnected', ...)
 
 ```typescript
@@ -581,6 +594,24 @@ Listens for battery charge num times events.
 | ------------------ | ------------------------------------------------------------ |
 | **`eventName`**    | <code>'onBatteryChargeNumTimes'</code>                       |
 | **`listenerFunc`** | <code>(event: { battery_cycles: number; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### addListener('onBatteryVoltage', ...)
+
+```typescript
+addListener(eventName: 'onBatteryVoltage', listenerFunc: (event: { voltage: number; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+Listens for battery voltage events.
+
+| Param              | Type                                                  |
+| ------------------ | ----------------------------------------------------- |
+| **`eventName`**    | <code>'onBatteryVoltage'</code>                       |
+| **`listenerFunc`** | <code>(event: { voltage: number; }) =&gt; void</code> |
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 

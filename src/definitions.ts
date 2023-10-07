@@ -181,13 +181,19 @@ export interface SunmiUHFPlugin {
    */
   getBatteryRemainingPercent(): Promise<void>;
 
-
   /**
    * Refreshes the battery cycles. The resulting battery cycles will be returned in `onBatteryChargeNumTimes` events.
    *
    * @throws {Error} If the device does not support this feature.
    */
   getBatteryChargeNumTimes(): Promise<void>;
+
+  /**
+   * Refreshes the battery voltage. The resulting battery voltage will be returned in `onBatteryVoltage` events.
+   *
+   * @throws {Error} If the device does not support this feature.
+   */
+  getBatteryVoltage(): Promise<void>;
 
   /**
    * Listens for reader connected events.
@@ -275,6 +281,14 @@ export interface SunmiUHFPlugin {
   addListener(
       eventName: 'onBatteryChargeNumTimes',
       listenerFunc: (event: { battery_cycles: number  }) => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  /**
+   * Listens for battery voltage events.
+   */
+  addListener(
+      eventName: 'onBatteryVoltage',
+      listenerFunc: (event: { voltage: number  }) => void,
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   /**
