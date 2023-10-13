@@ -1,5 +1,6 @@
 package dev.duma.capacitor.sunmiuhf;
 
+import android.content.Intent;
 import android.os.RemoteException;
 
 import com.getcapacitor.JSObject;
@@ -7,6 +8,9 @@ import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.MessageFormat;
 
@@ -93,7 +97,20 @@ public class SunmiUHFPlugin extends Plugin {
                 ret.put("region", region);
                 ret.put("band_low", band_low);
                 ret.put("band_high", band_high);
-                notifyListeners("onFirmwareVersion", ret);
+                notifyListeners("onReaderSN", ret);
+            }
+
+            @Override
+            public void onUnknownIntent(Intent intent) {
+                try {
+                    JSONObject json = new JSONObject();
+                    json.put("onUnknownIntent", intent.getAction());
+                    json.put("string", intent.toString());
+
+                    getBridge().triggerWindowJSEvent("sunmi_uhf_debug", json.toString());
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
             @Override

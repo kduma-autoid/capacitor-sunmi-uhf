@@ -25,6 +25,8 @@ public class SunmiUHFBroadcastReceiver {
         void onBatteryVoltage(int voltage);
         void onFirmwareVersion(int major, int minor);
         void onReaderSN(String sn, String region, int band_low, int band_high);
+
+        void onUnknownIntent(Intent intent);
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -98,6 +100,8 @@ public class SunmiUHFBroadcastReceiver {
                 case ParamCts.BROADCAST_BATTERY_VOLTAGE -> callback.onBatteryVoltage(
                         intent.getIntExtra(ParamCts.BATTERY_VOLTAGE, 0)
                 );
+
+                default -> callback.onUnknownIntent(intent);
             }
         }
     };
@@ -131,6 +135,12 @@ public class SunmiUHFBroadcastReceiver {
 
         filter.addAction(ParamCts.BROADCAST_FIRMWARE_VERSION);
         filter.addAction(ParamCts.BROADCAST_SN);
+
+        filter.addAction(ParamCts.BROADCAST_BATTERY_VOLTAGE);
+        filter.addAction(ParamCts.BROADCAST_CUSTOM_SN);
+        filter.addAction(ParamCts.BROADCAST_RFID_CLOSE);
+        filter.addAction(ParamCts.BROADCAST_RFID_OPEN);
+        filter.addAction(ParamCts.BROADCAST_UN_FOUND_READER);
 
         uhf.getPlugin().getContext().registerReceiver(receiver, filter);
     }
