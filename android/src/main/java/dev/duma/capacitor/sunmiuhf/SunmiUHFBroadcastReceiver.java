@@ -129,6 +129,9 @@ public class SunmiUHFBroadcastReceiver {
 
         filter.addAction(ParamCts.BROADCAST_BATTER_CHARGING_NUM_TIMES);
 
+        filter.addAction(ParamCts.BROADCAST_FIRMWARE_VERSION);
+        filter.addAction(ParamCts.BROADCAST_SN);
+
         uhf.getPlugin().getContext().registerReceiver(receiver, filter);
     }
 
