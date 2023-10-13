@@ -77,37 +77,37 @@ window.customElements.define(
           Cumulative Read Count: <span id='cumulative'>0</span> tag(s)
         </div>
         <hr>
-        <button id='start_scan'>startScanning()</button>
-        <button id='start_scan_255'>startScanning(0xFF)</button>
-        <button id='start_scan_callback'>startScanning(callback)</button>
-        <button id='stop_scan'>stopScanning()</button>
+        <button class="button" id='start_scan'>startScanning()</button>
+        <button class="button" id='start_scan_255'>startScanning(0xFF)</button>
+        <button class="button" id='start_scan_callback'>startScanning(callback)</button>
+        <button class="button" id='stop_scan'>stopScanning()</button>
         <hr>
-        <button id='getScanModel'>getScanModel()</button>
-        <button id='getBatteryChargeState'>getBatteryChargeState()</button>
-        <button id='getBatteryRemainingPercent'>getBatteryRemainingPercent()</button>
-        <button id='getBatteryChargeNumTimes'>getBatteryChargeNumTimes()</button>
-        <button id='getBatteryVoltage'>getBatteryVoltage()</button>
-        <button id='getFirmwareVersion'>getFirmwareVersion()</button>
-        <button id='getReaderSN'>getReaderSN()</button>
+        <button class="button" id='getScanModel'>getScanModel()</button>
+        <button class="button" id='getBatteryChargeState'>getBatteryChargeState()</button>
+        <button class="button" id='getBatteryRemainingPercent'>getBatteryRemainingPercent()</button>
+        <button class="button" id='getBatteryChargeNumTimes'>getBatteryChargeNumTimes()</button>
+        <button class="button" id='getBatteryVoltage'>getBatteryVoltage()</button>
+        <button class="button" id='getFirmwareVersion'>getFirmwareVersion()</button>
+        <button class="button" id='getReaderSN'>getReaderSN()</button>
         <hr>
-        <button id='setAccessEpcMatch'>setAccessEpcMatch(<span id='first_epc'>first</span>')</button>
-        <button id='cancelAccessEpcMatch'>cancelAccessEpcMatch()</button>
-        <button id='getAccessEpcMatch'>getAccessEpcMatch()</button>
+        <button class="button" id='setAccessEpcMatch'>setAccessEpcMatch(<span id='first_epc'>first</span>')</button>
+        <button class="button" id='cancelAccessEpcMatch'>cancelAccessEpcMatch()</button>
+        <button class="button" id='getAccessEpcMatch'>getAccessEpcMatch()</button>
         <hr>
-        <button id='readTag'>readTag()</button>
-        <button id='writeTag00'>writeTag(00)</button>
-        <button id='writeTagFF'>writeTag(FF)</button>
+        <button class="button" id='readTag'>readTag()</button>
+        <button class="button" id='writeTag00'>writeTag(00)</button>
+        <button class="button" id='writeTagFF'>writeTag(FF)</button>
         <hr>
-        <button id='writeTagPsw'>writeTag(Psw)</button>
-        <button id='writeTagCls'>writeTag(Cls)</button>
+        <button class="button" id='writeTagPsw'>writeTag(Psw)</button>
+        <button class="button" id='writeTagCls'>writeTag(Cls)</button>
         <hr>
-        <button id='lockTag'>lockTag()</button>
-        <button id='unlockTag'>(un)lockTag()</button>
-        <button id='killTag' disabled>killTag()</button>
+        <button class="button" id='lockTag'>lockTag()</button>
+        <button class="button" id='unlockTag'>(un)lockTag()</button>
+        <button class="button" id='killTag' disabled>killTag()</button>
         <hr>
-        <button id='setImpinjFastTid'>setImpinjFastTid(true)</button>
-        <button id='setImpinjFastTidOff'>setImpinjFastTid(false)</button>
-        <button id='getImpinjFastTid'>getImpinjFastTid()</button>
+        <button class="button" id='setImpinjFastTid'>setImpinjFastTid(true)</button>
+        <button class="button" id='setImpinjFastTidOff'>setImpinjFastTid(false)</button>
+        <button class="button" id='getImpinjFastTid'>getImpinjFastTid()</button>
         
         <h2>List</h2>
       
