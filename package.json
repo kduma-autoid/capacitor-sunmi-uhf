@@ -7,10 +7,11 @@
   "types": "dist/esm/index.d.ts",
   "unpkg": "dist/plugin.js",
   "files": [
-    "android/libs/",
+    "android/src/main/libs/",
     "android/src/main/",
     "android/build.gradle",
-    "dist/"
+    "dist/",
+    ".scripts/install_libs.js"
   ],
   "author": "Krystian Duma",
   "license": "MIT",
@@ -42,7 +43,8 @@
     "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.js",
     "clean": "rimraf ./dist",
     "watch": "tsc --watch",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "postinstall": "node ./.scripts/install_libs.js"
   },
   "devDependencies": {
     "@capacitor/android": "^5.0.0",

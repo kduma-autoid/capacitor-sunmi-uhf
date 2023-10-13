@@ -45,6 +45,7 @@ android {
 repositories {
     google()
     mavenCentral()
+    flatDir { dirs "./src/main/libs" }
 }
 
 
@@ -57,5 +58,5 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
 
     // implementation 'com.sunmi:rfidlibrary:1.1.2'
-    implementation project(":sunmi-scanner-sdk")
+    implementation (name: "SunmiScannerSdk-release-v1.1.8", ext: "aar")
 }
