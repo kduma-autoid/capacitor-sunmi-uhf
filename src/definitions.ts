@@ -236,7 +236,7 @@ export interface SunmiUHFPlugin {
   addListener(
       eventName: 'onReaderConnected',
       listenerFunc: () => void,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Listens for reader booted events.
@@ -244,7 +244,7 @@ export interface SunmiUHFPlugin {
   addListener(
       eventName: 'onReaderBoot',
       listenerFunc: () => void,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Listens for reader connected or booted events.
@@ -252,7 +252,7 @@ export interface SunmiUHFPlugin {
   addListener(
       eventName: 'onReaderBootOrConnected',
       listenerFunc: () => void,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Listens for reader disconnected  events.
@@ -260,7 +260,7 @@ export interface SunmiUHFPlugin {
   addListener(
       eventName: 'onReaderDisconnected',
       listenerFunc: () => void,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Listens for reader lost connection events.
@@ -268,7 +268,7 @@ export interface SunmiUHFPlugin {
   addListener(
       eventName: 'onReaderLostConnection',
       listenerFunc: () => void,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Listens for reader disconnected or lost connection events.
@@ -276,7 +276,7 @@ export interface SunmiUHFPlugin {
   addListener(
       eventName: 'onReaderDisconnectedOrLostConnection',
       listenerFunc: () => void,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    *  Listens for battery remaining percent events.
@@ -284,7 +284,7 @@ export interface SunmiUHFPlugin {
   addListener(
       eventName: 'onBatteryRemainingPercent',
       listenerFunc: (event: { charge_level: number }) => void,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Listens for battery low electricity events.
@@ -292,7 +292,7 @@ export interface SunmiUHFPlugin {
   addListener(
       eventName: 'onBatteryLowElectricity',
       listenerFunc: (event: { charge_level: number }) => void,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Listens for battery remaining percent or low electricity events.
@@ -300,7 +300,7 @@ export interface SunmiUHFPlugin {
   addListener(
       eventName: 'onBatteryRemainingPercentOrLowElectricity',
       listenerFunc: (event: { charge_level: number }) => void,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Listens for battery charge state events.
@@ -308,7 +308,7 @@ export interface SunmiUHFPlugin {
   addListener(
       eventName: 'onBatteryChargeState',
       listenerFunc: (event: { state: "Unknown"|"NotCharging"|"PreCharging"|"QuickCharging"|"Charged" }) => void,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Listens for battery charge num times events.
@@ -316,7 +316,7 @@ export interface SunmiUHFPlugin {
   addListener(
       eventName: 'onBatteryChargeNumTimes',
       listenerFunc: (event: { battery_cycles: number  }) => void,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Listens for battery voltage events.
@@ -324,7 +324,7 @@ export interface SunmiUHFPlugin {
   addListener(
       eventName: 'onBatteryVoltage',
       listenerFunc: (event: { voltage: number  }) => void,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Listens for UHF firmware version events.
@@ -332,7 +332,7 @@ export interface SunmiUHFPlugin {
   addListener(
       eventName: 'onFirmwareVersion',
       listenerFunc: (event: { version: string, major: number, minor: number  }) => void,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Listens for reader serial number events.
@@ -340,7 +340,7 @@ export interface SunmiUHFPlugin {
   addListener(
       eventName: 'onReaderSN',
       listenerFunc: (event: { sn: string, region: "America"|"Europe"|"China"|"Unknown", band_low: number, band_high: number  }) => void,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Removes all listeners

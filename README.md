@@ -431,7 +431,7 @@ Refreshes the reader serial number version. The resulting reader serial number v
 ### addListener('onReaderConnected', ...)
 
 ```typescript
-addListener(eventName: 'onReaderConnected', listenerFunc: () => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'onReaderConnected', listenerFunc: () => void) => Promise<PluginListenerHandle>
 ```
 
 Listens for reader connected events.
@@ -441,7 +441,7 @@ Listens for reader connected events.
 | **`eventName`**    | <code>'onReaderConnected'</code> |
 | **`listenerFunc`** | <code>() =&gt; void</code>       |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 --------------------
 
@@ -449,7 +449,7 @@ Listens for reader connected events.
 ### addListener('onReaderBoot', ...)
 
 ```typescript
-addListener(eventName: 'onReaderBoot', listenerFunc: () => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'onReaderBoot', listenerFunc: () => void) => Promise<PluginListenerHandle>
 ```
 
 Listens for reader booted events.
@@ -459,7 +459,7 @@ Listens for reader booted events.
 | **`eventName`**    | <code>'onReaderBoot'</code> |
 | **`listenerFunc`** | <code>() =&gt; void</code>  |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 --------------------
 
@@ -467,7 +467,7 @@ Listens for reader booted events.
 ### addListener('onReaderBootOrConnected', ...)
 
 ```typescript
-addListener(eventName: 'onReaderBootOrConnected', listenerFunc: () => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'onReaderBootOrConnected', listenerFunc: () => void) => Promise<PluginListenerHandle>
 ```
 
 Listens for reader connected or booted events.
@@ -477,7 +477,7 @@ Listens for reader connected or booted events.
 | **`eventName`**    | <code>'onReaderBootOrConnected'</code> |
 | **`listenerFunc`** | <code>() =&gt; void</code>             |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 --------------------
 
@@ -485,7 +485,7 @@ Listens for reader connected or booted events.
 ### addListener('onReaderDisconnected', ...)
 
 ```typescript
-addListener(eventName: 'onReaderDisconnected', listenerFunc: () => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'onReaderDisconnected', listenerFunc: () => void) => Promise<PluginListenerHandle>
 ```
 
 Listens for reader disconnected  events.
@@ -495,7 +495,7 @@ Listens for reader disconnected  events.
 | **`eventName`**    | <code>'onReaderDisconnected'</code> |
 | **`listenerFunc`** | <code>() =&gt; void</code>          |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 --------------------
 
@@ -503,7 +503,7 @@ Listens for reader disconnected  events.
 ### addListener('onReaderLostConnection', ...)
 
 ```typescript
-addListener(eventName: 'onReaderLostConnection', listenerFunc: () => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'onReaderLostConnection', listenerFunc: () => void) => Promise<PluginListenerHandle>
 ```
 
 Listens for reader lost connection events.
@@ -513,7 +513,7 @@ Listens for reader lost connection events.
 | **`eventName`**    | <code>'onReaderLostConnection'</code> |
 | **`listenerFunc`** | <code>() =&gt; void</code>            |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 --------------------
 
@@ -521,7 +521,7 @@ Listens for reader lost connection events.
 ### addListener('onReaderDisconnectedOrLostConnection', ...)
 
 ```typescript
-addListener(eventName: 'onReaderDisconnectedOrLostConnection', listenerFunc: () => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'onReaderDisconnectedOrLostConnection', listenerFunc: () => void) => Promise<PluginListenerHandle>
 ```
 
 Listens for reader disconnected or lost connection events.
@@ -531,7 +531,7 @@ Listens for reader disconnected or lost connection events.
 | **`eventName`**    | <code>'onReaderDisconnectedOrLostConnection'</code> |
 | **`listenerFunc`** | <code>() =&gt; void</code>                          |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 --------------------
 
@@ -539,7 +539,7 @@ Listens for reader disconnected or lost connection events.
 ### addListener('onBatteryRemainingPercent', ...)
 
 ```typescript
-addListener(eventName: 'onBatteryRemainingPercent', listenerFunc: (event: { charge_level: number; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'onBatteryRemainingPercent', listenerFunc: (event: { charge_level: number; }) => void) => Promise<PluginListenerHandle>
 ```
 
 Listens for battery remaining percent events.
@@ -549,7 +549,7 @@ Listens for battery remaining percent events.
 | **`eventName`**    | <code>'onBatteryRemainingPercent'</code>                   |
 | **`listenerFunc`** | <code>(event: { charge_level: number; }) =&gt; void</code> |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 --------------------
 
@@ -557,7 +557,7 @@ Listens for battery remaining percent events.
 ### addListener('onBatteryLowElectricity', ...)
 
 ```typescript
-addListener(eventName: 'onBatteryLowElectricity', listenerFunc: (event: { charge_level: number; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'onBatteryLowElectricity', listenerFunc: (event: { charge_level: number; }) => void) => Promise<PluginListenerHandle>
 ```
 
 Listens for battery low electricity events.
@@ -567,7 +567,7 @@ Listens for battery low electricity events.
 | **`eventName`**    | <code>'onBatteryLowElectricity'</code>                     |
 | **`listenerFunc`** | <code>(event: { charge_level: number; }) =&gt; void</code> |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 --------------------
 
@@ -575,7 +575,7 @@ Listens for battery low electricity events.
 ### addListener('onBatteryRemainingPercentOrLowElectricity', ...)
 
 ```typescript
-addListener(eventName: 'onBatteryRemainingPercentOrLowElectricity', listenerFunc: (event: { charge_level: number; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'onBatteryRemainingPercentOrLowElectricity', listenerFunc: (event: { charge_level: number; }) => void) => Promise<PluginListenerHandle>
 ```
 
 Listens for battery remaining percent or low electricity events.
@@ -585,7 +585,7 @@ Listens for battery remaining percent or low electricity events.
 | **`eventName`**    | <code>'onBatteryRemainingPercentOrLowElectricity'</code>   |
 | **`listenerFunc`** | <code>(event: { charge_level: number; }) =&gt; void</code> |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 --------------------
 
@@ -593,7 +593,7 @@ Listens for battery remaining percent or low electricity events.
 ### addListener('onBatteryChargeState', ...)
 
 ```typescript
-addListener(eventName: 'onBatteryChargeState', listenerFunc: (event: { state: "Unknown" | "NotCharging" | "PreCharging" | "QuickCharging" | "Charged"; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'onBatteryChargeState', listenerFunc: (event: { state: "Unknown" | "NotCharging" | "PreCharging" | "QuickCharging" | "Charged"; }) => void) => Promise<PluginListenerHandle>
 ```
 
 Listens for battery charge state events.
@@ -603,7 +603,7 @@ Listens for battery charge state events.
 | **`eventName`**    | <code>'onBatteryChargeState'</code>                                                                                      |
 | **`listenerFunc`** | <code>(event: { state: 'Unknown' \| 'NotCharging' \| 'PreCharging' \| 'QuickCharging' \| 'Charged'; }) =&gt; void</code> |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 --------------------
 
@@ -611,7 +611,7 @@ Listens for battery charge state events.
 ### addListener('onBatteryChargeNumTimes', ...)
 
 ```typescript
-addListener(eventName: 'onBatteryChargeNumTimes', listenerFunc: (event: { battery_cycles: number; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'onBatteryChargeNumTimes', listenerFunc: (event: { battery_cycles: number; }) => void) => Promise<PluginListenerHandle>
 ```
 
 Listens for battery charge num times events.
@@ -621,7 +621,7 @@ Listens for battery charge num times events.
 | **`eventName`**    | <code>'onBatteryChargeNumTimes'</code>                       |
 | **`listenerFunc`** | <code>(event: { battery_cycles: number; }) =&gt; void</code> |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 --------------------
 
@@ -629,7 +629,7 @@ Listens for battery charge num times events.
 ### addListener('onBatteryVoltage', ...)
 
 ```typescript
-addListener(eventName: 'onBatteryVoltage', listenerFunc: (event: { voltage: number; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'onBatteryVoltage', listenerFunc: (event: { voltage: number; }) => void) => Promise<PluginListenerHandle>
 ```
 
 Listens for battery voltage events.
@@ -639,7 +639,7 @@ Listens for battery voltage events.
 | **`eventName`**    | <code>'onBatteryVoltage'</code>                       |
 | **`listenerFunc`** | <code>(event: { voltage: number; }) =&gt; void</code> |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 --------------------
 
@@ -647,7 +647,7 @@ Listens for battery voltage events.
 ### addListener('onFirmwareVersion', ...)
 
 ```typescript
-addListener(eventName: 'onFirmwareVersion', listenerFunc: (event: { version: string; major: number; minor: number; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'onFirmwareVersion', listenerFunc: (event: { version: string; major: number; minor: number; }) => void) => Promise<PluginListenerHandle>
 ```
 
 Listens for UHF firmware version events.
@@ -657,7 +657,7 @@ Listens for UHF firmware version events.
 | **`eventName`**    | <code>'onFirmwareVersion'</code>                                                    |
 | **`listenerFunc`** | <code>(event: { version: string; major: number; minor: number; }) =&gt; void</code> |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 --------------------
 
@@ -665,7 +665,7 @@ Listens for UHF firmware version events.
 ### addListener('onReaderSN', ...)
 
 ```typescript
-addListener(eventName: 'onReaderSN', listenerFunc: (event: { sn: string; region: "America" | "Europe" | "China" | "Unknown"; band_low: number; band_high: number; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'onReaderSN', listenerFunc: (event: { sn: string; region: "America" | "Europe" | "China" | "Unknown"; band_low: number; band_high: number; }) => void) => Promise<PluginListenerHandle>
 ```
 
 Listens for reader serial number events.
@@ -675,7 +675,7 @@ Listens for reader serial number events.
 | **`eventName`**    | <code>'onReaderSN'</code>                                                                                                                    |
 | **`listenerFunc`** | <code>(event: { sn: string; region: 'Unknown' \| 'America' \| 'Europe' \| 'China'; band_low: number; band_high: number; }) =&gt; void</code> |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 --------------------
 
