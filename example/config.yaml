@@ -1,6 +1,6 @@
 vars:
   BUILD_NUMBER:
-    default: 4
+    default: 5
   VERSION_NAME:
     default: 3.0.0
   APP_NAME:

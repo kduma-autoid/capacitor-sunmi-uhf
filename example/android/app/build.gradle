@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
     namespace "dev.duma.capacitor.sunmiuhf.example"
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "dev.duma.capacitor.sunmiuhf.example"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 4
+        versionCode 5
         versionName "3.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
