@@ -1,6 +1,6 @@
 {
   "name": "@kduma-autoid/capacitor-sunmi-uhf",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Capacitor plugin for communication with Sunmi's UHF module SDK",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
