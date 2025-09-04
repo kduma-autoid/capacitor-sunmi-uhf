@@ -2,6 +2,8 @@
 
 Capacitor plugin for communication with Sunmi's UHF module SDK
 
+Check full documentation here: [opensource.duma.sh/libraries/capacitor/sunmi-uhf](https://opensource.duma.sh/libraries/capacitor/sunmi-uhf)
+
 ## Install
 
 ```bash
