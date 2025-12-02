@@ -1,10 +1,11 @@
 package dev.duma.capacitor.sunmiuhf;
 
-import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+
+import androidx.core.content.ContextCompat;
 
 import com.sunmi.rfid.constant.ParamCts;
 
@@ -117,7 +118,6 @@ public class SunmiUHFBroadcastReceiver {
         this.callback = callback;
     }
 
-    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     public void register() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(ParamCts.BROADCAST_READER_BOOT);
@@ -142,7 +142,12 @@ public class SunmiUHFBroadcastReceiver {
         filter.addAction(ParamCts.BROADCAST_RFID_OPEN);
         filter.addAction(ParamCts.BROADCAST_UN_FOUND_READER);
 
-        uhf.getPlugin().getContext().registerReceiver(receiver, filter);
+        ContextCompat.registerReceiver(
+            uhf.getPlugin().getContext(),
+            receiver,
+            filter,
+            ContextCompat.RECEIVER_EXPORTED
+        );
     }
 
     public void unregister() {
